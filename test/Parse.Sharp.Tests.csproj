@@ -42,7 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Parsers\CharacterParserTest.cs" />
+    <Compile Include="Parsers\ChoiceParserTest.cs" />
     <Compile Include="Parsers\IntParsingTest.cs" />
+    <Compile Include="Parsers\JsonParserTest.cs" />
+    <Compile Include="Parsers\NotParserTest.cs" />
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsers\TextParserTest.cs" />

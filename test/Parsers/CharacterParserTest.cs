@@ -31,6 +31,12 @@ namespace Parse.Sharp.Tests.Parsers
     [Test] public void PredicateCharacter()
     {
       AssertParse(Parse.LetterChar, "x", 'x');
+      AssertParse(Parse.LetterOrDigitChar, "x", 'x');
+      AssertParse(Parse.LetterOrDigitChar, "0", '0');
+      AssertParse(Parse.WhitespaceChar, " ", ' ');
+      AssertParse(Parse.WhitespaceChar, "\t", '\t');
+      AssertParse(Parse.LowerCaseChar, "a", 'a');
+      AssertParse(Parse.UpperCaseChar, "A", 'A');
 
       AssertFailure(
         parser: Parse.LetterChar, input: "1",

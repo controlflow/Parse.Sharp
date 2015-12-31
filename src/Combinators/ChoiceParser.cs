@@ -19,12 +19,12 @@
       var rightResult = myRight.TryParse(input, offset);
       if (rightResult.IsSuccessful) return rightResult;
 
-      if (leftResult.Offset > offset && rightResult.Offset == offset)
+      if (leftResult.Offset > rightResult.Offset)
       {
         return new ParseResult(leftResult.FailPoint, leftResult.Offset);
       }
 
-      if (rightResult.Offset > offset && leftResult.Offset == offset)
+      if (rightResult.Offset > leftResult.Offset)
       {
         return new ParseResult(rightResult.FailPoint, rightResult.Offset);
       }

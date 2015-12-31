@@ -1,13 +1,13 @@
 using System;
 using JetBrains.Annotations;
 using Parse.Sharp.Combinators;
+using Parse.Sharp.Parsers;
 
 namespace Parse.Sharp
 {
   public abstract class Parser<T> : Parser
   {
-    [Pure]
-    public T Parse([NotNull] string input)
+    [Pure] public T Parse([NotNull] string input)
     {
       var result = TryParse(input, offset: 0);
       if (result.IsSuccessful)
@@ -77,20 +77,17 @@ namespace Parse.Sharp
 
     // query syntax support:
 
-    [Pure, NotNull]
-    public Parser<TResult> Select<TResult>([NotNull] Func<T, TResult> selector)
+    [Pure, NotNull] public Parser<TResult> Select<TResult>([NotNull] Func<T, TResult> selector)
     {
       return new SelectParser<T, TResult>(this, selector);
     }
 
-    [Pure, NotNull]
-    public Parser<TResult> SelectMany<TResult>([NotNull] Func<T, Parser<TResult>> nextParser)
+    [Pure, NotNull] public Parser<TResult> SelectMany<TResult>([NotNull] Func<T, Parser<TResult>> nextParser)
     {
       return new SequentialParser<T, TResult>(this, nextParser);
     }
 
-    [Pure, NotNull]
-    public Parser<TResult> SelectMany<TNext, TResult>(
+    [Pure, NotNull] public Parser<TResult> SelectMany<TNext, TResult>(
       [NotNull] Func<T, Parser<TNext>> nextParser, [NotNull] Func<T, TNext, TResult> selector)
     {
       return new SequentialParser<T, TNext, TResult>(this, nextParser, selector);
@@ -98,10 +95,19 @@ namespace Parse.Sharp
 
     // combinators:
 
-    [NotNull, Pure]
-    public Parser<T> Or(Parser<T> other)
+    [NotNull, Pure] public Parser<T> Or(Parser<T> other)
     {
       return new ChoiceParser<T>(this, other);
+    }
+
+    [NotNull, Pure] public Parser<object> Not()
+    {
+      return new NotParser<T>(this, description: null);
+    }
+
+    [NotNull, Pure] public Parser<object> Not([NotNull] string description)
+    {
+      return new NotParser<T>(this, description);
     }
 
     // qualifiers:

@@ -6,9 +6,13 @@ namespace Parse.Sharp.Tests
 {
   public abstract class ParserTest
   {
-    public static void AssertParse([NotNull] Parser<bool> parser, [NotNull] string input)
+    public static void AssertParse<T>([NotNull] Parser<T> parser, [NotNull] string input)
     {
-      AssertParse(parser, input, expectedValue: true);
+      Assert.NotNull(parser, "parser != null");
+      Assert.NotNull(input, "input != null");
+
+      var parsedValue = parser.Parse(input);
+      GC.KeepAlive(parsedValue);
     }
 
     public static void AssertParse<T>([NotNull] Parser<T> parser, [NotNull] string input, T expectedValue)

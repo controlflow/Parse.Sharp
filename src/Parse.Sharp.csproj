@@ -36,6 +36,7 @@
     <Compile Include="Combinators\ChoiceParser.cs" />
     <Compile Include="Combinators\ReturnParser.cs" />
     <Compile Include="Combinators\OptionalParser.cs" />
+    <Compile Include="Parsers\NotParser.cs" />
     <Compile Include="Parsers\Characters\AnyCharacterParser.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="ParseException.cs" />
