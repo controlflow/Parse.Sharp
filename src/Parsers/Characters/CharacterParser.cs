@@ -1,6 +1,6 @@
-namespace Parse.Sharp.Parsers
+namespace Parse.Sharp.Parsers.Characters
 {
-  internal class CharacterParser : Parser<char>, Parser.IFailPoint
+  internal sealed class CharacterParser : Parser<char>, Parser.IFailPoint
   {
     private readonly char myCharacter;
 
@@ -9,7 +9,7 @@ namespace Parse.Sharp.Parsers
       myCharacter = character;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
+    protected internal override ParseResult TryParse(string input, int offset)
     {
       if (offset < input.Length && input[offset] == myCharacter)
       {

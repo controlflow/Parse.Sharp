@@ -11,38 +11,29 @@
       myRight = right;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
+    protected internal override ParseResult TryParse(string input, int offset)
     {
-      var leftResult = myLeft.TryParse(input, offset, isConditional: true);
-      if (leftResult.IsSuccessful)
-      {
-        return new ParseResult(leftResult.Value, leftResult.Offset);
-      }
+      var leftResult = myLeft.TryParse(input, offset);
+      if (leftResult.IsSuccessful) return leftResult;
 
-      var rightResult = myRight.TryParse(input, offset, isConditional: true);
-      if (rightResult.IsSuccessful)
-      {
-        return rightResult;
-      }
+      var rightResult = myRight.TryParse(input, offset);
+      if (rightResult.IsSuccessful) return rightResult;
 
-      // todo: reference equality is a bad thing, I guess
-
-      // first parsed a bit
-      if (leftResult.FailPoint != myLeft && rightResult.FailPoint == myRight)
+      if (leftResult.Offset > offset && rightResult.Offset == offset)
       {
         return new ParseResult(leftResult.FailPoint, leftResult.Offset);
       }
 
-      // second parsed a bit
-      if (rightResult.FailPoint != myRight && leftResult.FailPoint == myLeft)
+      if (rightResult.Offset > offset && leftResult.Offset == offset)
       {
         return new ParseResult(rightResult.FailPoint, rightResult.Offset);
       }
 
-      return new ParseResult(failPoint: new ChoiseFailPoint(leftResult, rightResult), atOffset: offset);
+      var failPoint = new ChoiseFailPoint(leftResult, rightResult);
+      return new ParseResult(failPoint, offset);
     }
 
-    class ChoiseFailPoint : IFailPoint
+    private sealed class ChoiseFailPoint : IFailPoint
     {
       private readonly ParseResult myLeftResult;
       private readonly ParseResult myRightResult;

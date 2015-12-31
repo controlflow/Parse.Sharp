@@ -41,7 +41,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Parsers\CharParserTest.cs" />
+    <Compile Include="Parsers\CharacterParserTest.cs" />
     <Compile Include="Parsers\IntParsingTest.cs" />
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

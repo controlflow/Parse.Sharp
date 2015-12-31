@@ -1,73 +1,71 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Parse.Sharp.Combinators;
 using Parse.Sharp.Parsers;
-
-// ReSharper disable RedundantToStringCallForValueType
+using Parse.Sharp.Parsers.Characters;
 
 namespace Parse.Sharp
 {
+  // todo: Parse.SeparatedList(item, separator)
+
   [PublicAPI]
   public class Parse
   {
-    public static readonly Parser<int> Digit = new DigitParser();
+    // digits and numbers:
 
-    
+    [NotNull] public static readonly Parser<int> Digit = new DigitParser();
 
-    public static readonly Parser<int> Int32 = new Integer32Parser();
-
-
+    [NotNull] public static readonly Parser<int> Int32 = new Integer32Parser();
 
     // characters:
 
-    public static readonly Parser<char> AnyChar = new AnyCharacterParser(); 
+    [NotNull] public static readonly Parser<char> AnyChar = new AnyCharacterParser();
 
-    public static readonly Parser<char> Dot = new CharacterParser('.');
-    public static readonly Parser<char> Comma = new CharacterParser(',');
-    public static readonly Parser<char> LBrace = new CharacterParser('[');
-    public static readonly Parser<char> RBrace = new CharacterParser(']');
+    [NotNull] public static readonly Parser<char> Dot = new CharacterParser('.');
+    [NotNull] public static readonly Parser<char> Comma = new CharacterParser(',');
+    [NotNull] public static readonly Parser<char> LBrace = new CharacterParser('[');
+    [NotNull] public static readonly Parser<char> RBrace = new CharacterParser(']');
 
+    [NotNull, Pure]
     public static Parser<char> Char(char character)
     {
       return new CharacterParser(character);
     }
 
+    [NotNull] public static readonly Parser<char> DigitChar = Char(char.IsDigit, "digit character");
+    [NotNull] public static readonly Parser<char> LetterChar = Char(char.IsLetter, "letter character");
+    [NotNull] public static readonly Parser<char> LetterOrDigitChar = Char(char.IsLetterOrDigit, "letter or digit character");
+    [NotNull] public static readonly Parser<char> LowerCaseChar = Char(char.IsLower, "lower case character");
+    [NotNull] public static readonly Parser<char> UpperCaseChar = Char(char.IsUpper, "upper case character");
+    [NotNull] public static readonly Parser<char> WhitespaceChar = Char(char.IsWhiteSpace, "whitespace");
+
+    [NotNull, Pure]
+    public static Parser<char> Char([NotNull] Predicate<char> predicate, [NotNull] string description)
+    {
+      return new PredicateCharacterParser(predicate, description);
+    }
+
     // text:
 
+    [NotNull, Pure]
     public static Parser<string> Text([NotNull] string text)
     {
       return new TextParser(text);
     }
-    
 
+    // combinators:
+
+    [NotNull, Pure]
     public static Parser<T> Return<T>(T value)
     {
       return new ReturnParser<T>(value);
     }
 
-    private class ReturnParser<T> : Parser<T>
-    {
-      private readonly T myValue;
-
-      public ReturnParser(T value)
-      {
-        myValue = value;
-      }
-
-      protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
-      {
-        return new ParseResult(myValue, offset);
-      }
-    }
-
-    public static Parser<T> Choice<T>(Parser<T> left, Parser<T> right)
+    [NotNull, Pure]
+    public static Parser<T> Choice<T>([NotNull] Parser<T> left, [NotNull] Parser<T> right)
     {
       return left.Or(right);
     }
-
-    //public static Parser<T?> OptionalOrNull<T>(this Parser<T> parser) where T : struct
-    //{
-    //  return null;
-    //}
 
     public static Parser Sequence<T1, T2>(Parser<T1> firstParser, Parser<T2> secondParser)
     {

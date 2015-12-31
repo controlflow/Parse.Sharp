@@ -1,8 +1,8 @@
-﻿namespace Parse.Sharp.Parsers
+﻿namespace Parse.Sharp.Parsers.Characters
 {
-  internal class AnyCharacterParser : Parser<char>, Parser.IFailPoint
+  internal sealed class AnyCharacterParser : Parser<char>, Parser.IFailPoint
   {
-    protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
+    protected internal override ParseResult TryParse(string input, int offset)
     {
       if (offset < input.Length)
       {

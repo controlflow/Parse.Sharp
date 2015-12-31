@@ -6,22 +6,27 @@ namespace Parse.Sharp
 {
   public abstract class Parser<T> : Parser
   {
-    public T Parse(string input)
+    [Pure]
+    public T Parse([NotNull] string input)
     {
-      var result = TryParse(input, offset: 0, isConditional: false);
+      var result = TryParse(input, offset: 0);
       if (result.IsSuccessful)
       {
         var endOffset = result.Offset;
         if (endOffset == input.Length) return result.Value;
 
-        var message = Unexpected("End of string", input, endOffset);
+        var message = Unexpected("end of string", input, endOffset);
         throw new ParseException(message, endOffset);
       }
-
-      throw new ParseException(result.FailPoint.GetExpectedMessage(), result.Offset);
+      else
+      {
+        var expected = result.FailPoint.GetExpectedMessage();
+        var message = Unexpected(expected, input, result.Offset);
+        throw new ParseException(message, result.Offset);
+      }
     }
 
-    protected internal abstract ParseResult TryParse(string input, int offset, bool isConditional);
+    protected internal abstract ParseResult TryParse(string input, int offset);
 
     protected internal struct ParseResult
     {
@@ -91,14 +96,17 @@ namespace Parse.Sharp
       return new SequentialParser<T, TNext, TResult>(this, nextParser, selector);
     }
 
-    // conditional:
+    // combinators:
 
+    [NotNull, Pure]
     public Parser<T> Or(Parser<T> other)
     {
       return new ChoiceParser<T>(this, other);
     }
 
     // qualifiers:
+
+
 
     public Parser<T[]> ZeroOrMany()
     {
@@ -119,7 +127,7 @@ namespace Parse.Sharp
         myMax = max;
       }
 
-      protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
+      protected internal override ParseResult TryParse(string input, int offset)
       {
         if (myMin > 0 && myMin == myMax)
         {
@@ -130,7 +138,7 @@ namespace Parse.Sharp
         {
           // todo: compute if conditional!
 
-          var result = myUnderlyingParser.TryParse(input, offset, isConditional);
+          var result = myUnderlyingParser.TryParse(input, offset);
           if (result.IsSuccessful)
           {
 
@@ -144,34 +152,16 @@ namespace Parse.Sharp
       }
     }
 
+    [NotNull, Pure]
     public Parser<T> OptionalOrDefault()
     {
-      return new OptionalParser(this, default(T));
+      return new OptionalParser<T>(this, default(T));
     }
 
+    [NotNull, Pure]
     public Parser<T> OptionalOrDefault(T defaultValue)
     {
-      return new OptionalParser(this, defaultValue);
-    }
-
-    private class OptionalParser : Parser<T>
-    {
-      private readonly Parser<T> myParser;
-      private readonly T myDefaultValue;
-
-      public OptionalParser(Parser<T> parser, T defaultValue)
-      {
-        myParser = parser;
-        myDefaultValue = defaultValue;
-      }
-
-      protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
-      {
-        var result = myParser.TryParse(input, offset, isConditional: true);
-        if (result.IsSuccessful) return result;
-
-        return new ParseResult(myDefaultValue, offset);
-      }
+      return new OptionalParser<T>(this, defaultValue);
     }
 
     //private class ToNullable<TResult> : Parser<TResult?>
@@ -184,7 +174,6 @@ namespace Parse.Sharp
     //}
   }
 
-  
 
   public abstract class Parser
   {

@@ -33,14 +33,17 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Combinators\Choice.cs" />
-    <Compile Include="Parsers\AnyCharacterParser.cs" />
+    <Compile Include="Combinators\ChoiceParser.cs" />
+    <Compile Include="Combinators\ReturnParser.cs" />
+    <Compile Include="Combinators\OptionalParser.cs" />
+    <Compile Include="Parsers\Characters\AnyCharacterParser.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="Parsers\CharacterParser.cs" />
+    <Compile Include="Parsers\Characters\CharacterParser.cs" />
     <Compile Include="Parsers\DigitParser.cs" />
     <Compile Include="Parsers\Integer32Parser.cs" />
+    <Compile Include="Parsers\Characters\PredicateCharacterParser.cs" />
     <Compile Include="Parsers\TextParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Combinators\SelectParser.cs" />

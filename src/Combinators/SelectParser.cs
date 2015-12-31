@@ -14,15 +14,15 @@ namespace Parse.Sharp.Combinators
       mySelector = selector;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
+    protected internal override ParseResult TryParse(string input, int offset)
     {
-      var result = myUnderlyingParser.TryParse(input, offset, isConditional);
+      var result = myUnderlyingParser.TryParse(input, offset);
       if (result.IsSuccessful)
       {
-        return new ParseResult(mySelector(result.Value), result.Offset);
+        return new ParseResult(value: mySelector(result.Value), nextOffset: result.Offset);
       }
 
-      return new ParseResult(result.FailPoint, result.Offset);
+      return new ParseResult(failPoint: result.FailPoint, atOffset: result.Offset);
     }
   }
 }

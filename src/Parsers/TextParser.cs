@@ -12,7 +12,7 @@ namespace Parse.Sharp.Parsers
       myText = text;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
+    protected internal override ParseResult TryParse(string input, int offset)
     {
       var expectedLength = myText.Length;
       if (expectedLength + offset <= input.Length)
