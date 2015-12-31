@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parse.Sharp", "src\Parse.Sharp.csproj", "{D10E175E-83DB-47EC-9353-34D6E10D790B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parse.Sharp.Tests", "test\Parse.Sharp.Tests.csproj", "{E957FD07-B5C9-40FE-B5A3-613F9F654E47}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D10E175E-83DB-47EC-9353-34D6E10D790B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D10E175E-83DB-47EC-9353-34D6E10D790B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D10E175E-83DB-47EC-9353-34D6E10D790B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D10E175E-83DB-47EC-9353-34D6E10D790B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E957FD07-B5C9-40FE-B5A3-613F9F654E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E957FD07-B5C9-40FE-B5A3-613F9F654E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E957FD07-B5C9-40FE-B5A3-613F9F654E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E957FD07-B5C9-40FE-B5A3-613F9F654E47}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
