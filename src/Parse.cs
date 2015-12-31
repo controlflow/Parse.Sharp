@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Parse.Sharp.Parsers;
 
 // ReSharper disable RedundantToStringCallForValueType
 
@@ -10,80 +11,33 @@ namespace Parse.Sharp
   {
     public static readonly Parser<int> Digit = new DigitParser();
 
-    private class DigitParser : Parser<int>
-    {
-      protected override ParseResult TryParse(string input, int offset, bool isConditional)
-      {
-        if (offset < input.Length)
-        {
-          var ch = input[offset];
-          if (ch >= '0' && ch <= '9')
-          {
-            return new ParseResult(ch - '0', offset + 1);
-          }
-        }
+    
 
-        return new ParseResult(Unexpected("Digit", input, offset), offset);
-      }
-    }
+    public static readonly Parser<int> Int32 = new Integer32Parser();
 
-    public static readonly Parser<int> Int32 = new IntParser();
 
-    private class IntParser : Parser<int>
-    {
-      // todo: handle int32 overflow
 
-      protected override ParseResult TryParse(string input, int offset, bool isConditional)
-      {
-        var value = default(int);
-        var parsed = false;
+    // characters:
 
-        for (; offset < input.Length; offset++)
-        {
-          var ch = input[offset];
-          if (ch < '0' || ch > '9') break;
+    public static readonly Parser<char> AnyChar = new AnyCharacterParser(); 
 
-          var digit = ch - '0';
-          value = value * 10 + digit;
-          parsed = true;
-        }
-
-        if (parsed)
-        {
-          return new ParseResult(value, offset);
-        }
-
-        return new ParseResult(Unexpected("Integer", input, offset), offset);
-      }
-    }
-
-    public static readonly Parser<char> Dot = new CharParser('.');
+    public static readonly Parser<char> Dot = new CharacterParser('.');
+    public static readonly Parser<char> Comma = new CharacterParser(',');
+    public static readonly Parser<char> LBrace = new CharacterParser('[');
+    public static readonly Parser<char> RBrace = new CharacterParser(']');
 
     public static Parser<char> Char(char character)
     {
-      return new CharParser(character);
+      return new CharacterParser(character);
     }
 
-    private class CharParser : Parser<char>
+    // text:
+
+    public static Parser<string> Text([NotNull] string text)
     {
-      private readonly char myExpectedCharacter;
-
-      public CharParser(char expectedCharacter)
-      {
-        myExpectedCharacter = expectedCharacter;
-      }
-
-      protected override ParseResult TryParse(string input, int offset, bool isConditional)
-      {
-        if (offset < input.Length && input[offset] == myExpectedCharacter)
-        {
-          return new ParseResult(myExpectedCharacter, offset + 1);
-        }
-
-        var message = "Char '" + myExpectedCharacter.ToString() + "'";
-        return new ParseResult(Unexpected(message, input, offset), offset);
-      }
+      return new TextParser(text);
     }
+    
 
     public static Parser<T> Return<T>(T value)
     {
@@ -99,7 +53,7 @@ namespace Parse.Sharp
         myValue = value;
       }
 
-      protected override ParseResult TryParse(string input, int offset, bool isConditional)
+      protected internal override ParseResult TryParse(string input, int offset, bool isConditional)
       {
         return new ParseResult(myValue, offset);
       }

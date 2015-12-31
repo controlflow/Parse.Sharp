@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Parse.Sharp.Tests
+namespace Parse.Sharp.Tests.Parsers
 {
   [TestFixture]
   public class IntParsingTest
