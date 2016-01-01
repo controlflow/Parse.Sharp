@@ -7,7 +7,13 @@ namespace Parse.Sharp.Tests.Parsers
   {
     [Test] public void M()
     {
-      //"{aaaaa}";
+      //"{\"aaaaa\":\"booo\",\"xx\"  : [\"aaa\", \"123\"] }";
+
+      //var stringLiteral =
+      //  from lquote in Parse.Char('"')
+      //  from content in Parse.AnyChar.Expect(Parse.Char('"'))
+      //  from rquote in Parse.Char('"')
+      //  select content;
     }
   }
 }

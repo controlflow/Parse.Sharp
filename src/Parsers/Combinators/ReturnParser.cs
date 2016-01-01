@@ -1,4 +1,4 @@
-﻿namespace Parse.Sharp.Combinators
+﻿namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class ReturnParser<T> : Parser<T>
   {

@@ -1,7 +1,8 @@
 using System;
 using JetBrains.Annotations;
-using Parse.Sharp.Combinators;
 using Parse.Sharp.Parsers;
+using Parse.Sharp.Parsers.Combinators;
+using Parse.Sharp.Parsers.Strings;
 
 namespace Parse.Sharp
 {
@@ -26,7 +27,15 @@ namespace Parse.Sharp
       }
     }
 
-    protected internal abstract ParseResult TryParse(string input, int offset);
+    [Pure] protected internal abstract ParseResult TryParse([NotNull] string input, int offset);
+
+    protected internal sealed override int TryParseAny(string input, int offset)
+    {
+      var parseResult = TryParse(input, offset);
+      if (parseResult.IsSuccessful) return parseResult.Offset;
+
+      return -1;
+    }
 
     protected internal struct ParseResult
     {
@@ -75,6 +84,13 @@ namespace Parse.Sharp
       return expected + " expected, got '" + ReplaceNewLines(tail) + "'";
     }
 
+
+    [NotNull, Pure]
+    public Parser<string> ManyToString([CanBeNull] string description = null)
+    {
+      return new ManyToStringParser(this, description);
+    }
+
     // query syntax support:
 
     [Pure, NotNull] public Parser<TResult> Select<TResult>([NotNull] Func<T, TResult> selector)
@@ -100,14 +116,14 @@ namespace Parse.Sharp
       return new ChoiceParser<T>(this, other);
     }
 
-    [NotNull, Pure] public Parser<object> Not()
-    {
-      return new NotParser<T>(this, description: null);
-    }
-
-    [NotNull, Pure] public Parser<object> Not([NotNull] string description)
+    [NotNull, Pure] public Parser<object> Not([CanBeNull] string description = null)
     {
       return new NotParser<T>(this, description);
+    }
+
+    [NotNull, Pure] public Parser<T> NotEmpty([CanBeNull] string description = null)
+    {
+      return new NotEmptyParser<T>(this, description);
     }
 
     // qualifiers:
@@ -189,6 +205,7 @@ namespace Parse.Sharp
     //  throw new InvalidOperationException("Should not be invoked");
     //}
 
+    protected internal abstract int TryParseAny([NotNull] string input, int offset);
     
 
     private static readonly string[] NewLineStrings = {

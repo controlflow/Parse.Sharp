@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace Parse.Sharp.Combinators
+namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class SequentialParser<T, TResult> : Parser<TResult>
   {

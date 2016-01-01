@@ -1,11 +1,13 @@
-﻿namespace Parse.Sharp.Combinators
+﻿using JetBrains.Annotations;
+
+namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class ChoiceParser<T> : Parser<T>
   {
-    private readonly Parser<T> myLeft;
-    private readonly Parser<T> myRight;
+    [NotNull] private readonly Parser<T> myLeft;
+    [NotNull] private readonly Parser<T> myRight;
 
-    public ChoiceParser(Parser<T> left, Parser<T> right)
+    public ChoiceParser([NotNull] Parser<T> left, [NotNull] Parser<T> right)
     {
       myLeft = left;
       myRight = right;

@@ -1,8 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Parse.Sharp.Combinators;
 using Parse.Sharp.Parsers;
 using Parse.Sharp.Parsers.Characters;
+using Parse.Sharp.Parsers.Combinators;
+using Parse.Sharp.Parsers.Strings;
 
 namespace Parse.Sharp
 {
@@ -45,18 +46,21 @@ namespace Parse.Sharp
       return new PredicateCharacterParser(predicate, description);
     }
 
-    // text:
+    // strings:
 
-    [NotNull, Pure]
-    public static Parser<string> Text([NotNull] string text)
+    [NotNull, Pure] public static Parser<string> String([NotNull] string text)
     {
-      return new TextParser(text);
+      return new StringParser(text);
+    }
+
+    [NotNull, Pure] public static Parser<string> IgnoreCaseString([NotNull] string text)
+    {
+      return new IgnoreCaseStringParser(text);
     }
 
     // combinators:
 
-    [NotNull, Pure]
-    public static Parser<T> Return<T>(T value)
+    [NotNull, Pure] public static Parser<T> Return<T>(T value)
     {
       return new ReturnParser<T>(value);
     }

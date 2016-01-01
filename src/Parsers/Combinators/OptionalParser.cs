@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Parse.Sharp.Combinators
+namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class OptionalParser<T> : Parser<T>
   {
