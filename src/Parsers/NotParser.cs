@@ -13,9 +13,9 @@ namespace Parse.Sharp.Parsers
       myDescription = description;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var result = myParser.TryParse(input, offset);
+      var result = myParser.TryParseValue(input, offset);
       if (result.IsSuccessful)
       {
         return new ParseResult(failPoint: this, atOffset: offset);

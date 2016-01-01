@@ -14,13 +14,13 @@ namespace Parse.Sharp.Parsers.Combinators
       myNextParser = nextParser;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var result = myFirstParser.TryParse(input, offset);
+      var result = myFirstParser.TryParseValue(input, offset);
       if (result.IsSuccessful)
       {
         var nextParser = myNextParser(result.Value);
-        return nextParser.TryParse(input, result.Offset);
+        return nextParser.TryParseValue(input, result.Offset);
       }
 
       return new ParseResult(result.FailPoint, result.Offset);
@@ -42,16 +42,16 @@ namespace Parse.Sharp.Parsers.Combinators
       mySelector = selector;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var firstResult = myFirstParser.TryParse(input, offset);
+      var firstResult = myFirstParser.TryParseValue(input, offset);
       if (!firstResult.IsSuccessful)
       {
         return new ParseResult(firstResult.FailPoint, firstResult.Offset);
       }
 
       var nextParser = myNextParser(firstResult.Value);
-      var nextResult = nextParser.TryParse(input, firstResult.Offset);
+      var nextResult = nextParser.TryParseValue(input, firstResult.Offset);
       if (!nextResult.IsSuccessful)
       {
         return new ParseResult(nextResult.FailPoint, nextResult.Offset);

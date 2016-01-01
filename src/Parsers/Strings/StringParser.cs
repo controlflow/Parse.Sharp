@@ -12,7 +12,7 @@ namespace Parse.Sharp.Parsers.Strings
       myString = @string;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
       var expectedLength = myString.Length;
       if (expectedLength + offset <= input.Length)

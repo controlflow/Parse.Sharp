@@ -2,7 +2,7 @@
 {
   internal sealed class DigitParser : Parser<int>, Parser.IFailPoint
   {
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
       if (offset < input.Length)
       {

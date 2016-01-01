@@ -9,7 +9,7 @@ namespace Parse.Sharp.Parsers.Characters
       myCharacter = character;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
       if (offset < input.Length && input[offset] == myCharacter)
       {

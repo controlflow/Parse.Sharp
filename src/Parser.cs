@@ -10,7 +10,7 @@ namespace Parse.Sharp
   {
     [Pure] public T Parse([NotNull] string input)
     {
-      var result = TryParse(input, offset: 0);
+      var result = TryParseValue(input, offset: 0);
       if (result.IsSuccessful)
       {
         var endOffset = result.Offset;
@@ -27,14 +27,18 @@ namespace Parse.Sharp
       }
     }
 
-    [Pure] protected internal abstract ParseResult TryParse([NotNull] string input, int offset);
+    [Pure] protected internal abstract ParseResult TryParseValue([NotNull] string input, int offset);
 
-    protected internal sealed override int TryParseAny(string input, int offset)
+    // todo: check out inheritors for more efficient implementations
+    protected internal sealed override ParseAttempt TryParseVoid(string input, int offset)
     {
-      var parseResult = TryParse(input, offset);
-      if (parseResult.IsSuccessful) return parseResult.Offset;
+      var parseResult = TryParseValue(input, offset);
+      if (parseResult.IsSuccessful)
+      {
+        return new ParseAttempt(parseResult.Offset);
+      }
 
-      return -1;
+      return new ParseAttempt(parseResult.FailPoint, parseResult.Offset);
     }
 
     protected internal struct ParseResult
@@ -121,9 +125,9 @@ namespace Parse.Sharp
       return new NotParser<T>(this, description);
     }
 
-    [NotNull, Pure] public Parser<T> NotEmpty([CanBeNull] string description = null)
+    [NotNull, Pure] public Parser<T> NonEmpty([CanBeNull] string description = null)
     {
-      return new NotEmptyParser<T>(this, description);
+      return new NonEmptyParser<T>(this, description);
     }
 
     // qualifiers:
@@ -149,7 +153,7 @@ namespace Parse.Sharp
         myMax = max;
       }
 
-      protected internal override ParseResult TryParse(string input, int offset)
+      protected internal override ParseResult TryParseValue(string input, int offset)
       {
         if (myMin > 0 && myMin == myMax)
         {
@@ -160,7 +164,7 @@ namespace Parse.Sharp
         {
           // todo: compute if conditional!
 
-          var result = myUnderlyingParser.TryParse(input, offset);
+          var result = myUnderlyingParser.TryParseValue(input, offset);
           if (result.IsSuccessful)
           {
 
@@ -205,8 +209,32 @@ namespace Parse.Sharp
     //  throw new InvalidOperationException("Should not be invoked");
     //}
 
-    protected internal abstract int TryParseAny([NotNull] string input, int offset);
-    
+    protected internal abstract ParseAttempt TryParseVoid([NotNull] string input, int offset);
+
+    protected internal struct ParseAttempt
+    {
+      private readonly int myOffset;
+      private readonly IFailPoint myFailPoint;
+
+      public ParseAttempt(int nextOffset)
+      {
+        myOffset = nextOffset;
+        myFailPoint = null;
+      }
+
+      public ParseAttempt([NotNull] IFailPoint failPoint, int atOffset)
+      {
+        myOffset = atOffset;
+        myFailPoint = failPoint;
+      }
+
+      public bool IsSuccessful { get { return myFailPoint == null; } }
+
+      public int Offset { get { return myOffset; } }
+      public IFailPoint FailPoint { get { return myFailPoint; } }
+    }
+
+
 
     private static readonly string[] NewLineStrings = {
       "\r\n", "\u0085", "\u2028", "\u2029", "\r", "\n"

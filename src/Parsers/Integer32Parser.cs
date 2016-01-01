@@ -4,7 +4,7 @@
   {
     // todo: handle int32 overflow
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
       var value = default(int);
       var parsed = false;

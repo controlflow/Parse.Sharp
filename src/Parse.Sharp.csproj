@@ -33,8 +33,10 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Parsers\Combinators\BeforeParserTest.cs" />
     <Compile Include="Parsers\Combinators\ChoiceParser.cs" />
-    <Compile Include="Parsers\Combinators\NotEmptyParser.cs" />
+    <Compile Include="Parsers\Combinators\AfterParserTest.cs" />
+    <Compile Include="Parsers\Combinators\NonEmptyParser.cs" />
     <Compile Include="Parsers\Combinators\ReturnParser.cs" />
     <Compile Include="Parsers\Combinators\OptionalParser.cs" />
     <Compile Include="Parsers\Strings\IgnoreCaseStringParser.cs" />
@@ -47,7 +49,6 @@
     <Compile Include="Parsers\DigitParser.cs" />
     <Compile Include="Parsers\Integer32Parser.cs" />
     <Compile Include="Parsers\Characters\PredicateCharacterParser.cs" />
-    <Compile Include="Parsers\Strings\NonEmptyStringParser.cs" />
     <Compile Include="Parsers\Strings\ManyToStringParser.cs" />
     <Compile Include="Parsers\Strings\StringParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

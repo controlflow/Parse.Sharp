@@ -13,12 +13,12 @@ namespace Parse.Sharp.Parsers.Combinators
       myRight = right;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var leftResult = myLeft.TryParse(input, offset);
+      var leftResult = myLeft.TryParseValue(input, offset);
       if (leftResult.IsSuccessful) return leftResult;
 
-      var rightResult = myRight.TryParse(input, offset);
+      var rightResult = myRight.TryParseValue(input, offset);
       if (rightResult.IsSuccessful) return rightResult;
 
       if (leftResult.Offset > rightResult.Offset)

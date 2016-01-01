@@ -37,7 +37,7 @@ namespace Parse.Sharp.Tests.Parsers
         failureOffset: 14);
 
       AssertFailure(
-        Parse.LetterOrDigitChar.Not().Not().ManyToString("identifier").NotEmpty(),
+        Parse.LetterOrDigitChar.Not().Not().ManyToString("identifier").NonEmpty(),
         input: "_abAA534\r\nABC",
         expectedMessage: "non-empty identifier expected, got '_abAA534 ABC'",
         failureOffset: 0);

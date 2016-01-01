@@ -13,12 +13,12 @@ namespace Parse.Sharp.Parsers.Strings
       myDescription = description;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
       var innerOffset = offset;
       for (; innerOffset < input.Length; )
       {
-        var nextOffset = myContentsParser.TryParseAny(input, innerOffset);
+        var nextOffset = myContentsParser.TryParseVoid(input, innerOffset);
         if (nextOffset < 0) break;
 
         innerOffset = (nextOffset > innerOffset) ? nextOffset : innerOffset + 1;

@@ -14,9 +14,9 @@ namespace Parse.Sharp.Parsers.Combinators
       mySelector = selector;
     }
 
-    protected internal override ParseResult TryParse(string input, int offset)
+    protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var result = myUnderlyingParser.TryParse(input, offset);
+      var result = myUnderlyingParser.TryParseValue(input, offset);
       if (result.IsSuccessful)
       {
         return new ParseResult(value: mySelector(result.Value), nextOffset: result.Offset);
