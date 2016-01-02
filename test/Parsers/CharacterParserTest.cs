@@ -17,7 +17,7 @@ namespace Parse.Sharp.Tests.Parsers
       AssertFailure(Parse.Char('+'), input: "///", expectedMessage: "'+' expected, got '///'");
     }
 
-    [Test] public void IgnoreCase()
+    [Test] public void IgnoreCaseCharacter()
     {
       Assert.IsTrue(ReferenceEquals(Parse.Dot.IgnoreCase(), Parse.Dot));
 
@@ -31,6 +31,7 @@ namespace Parse.Sharp.Tests.Parsers
     [Test] public void AnyCharacter()
     {
       AssertParse(Parse.AnyChar, "x", 'x');
+      AssertParse(Parse.AnyChar.IgnoreCase(), "x", 'x');
 
       AssertFailure(Parse.AnyChar, input: "xyz",
         expectedMessage: "end of string expected, got 'yz'", failureOffset: 1);
@@ -39,8 +40,11 @@ namespace Parse.Sharp.Tests.Parsers
     [Test] public void CharacterExcept()
     {
       AssertParse(Parse.CharExcept('.'), "a", 'a');
+      AssertParse(Parse.CharExcept('a').IgnoreCase(), "b", 'b');
+      AssertParse(Parse.CharExcept('A').IgnoreCase(), "b", 'b');
 
       AssertFailure(Parse.CharExcept('.'), input: ".", expectedMessage: "not '.' expected, got '.'");
+      AssertFailure(Parse.CharExcept('.').IgnoreCase(), input: ".", expectedMessage: "not '.' expected, got '.'");
     }
 
     [Test] public void PredicateCharacter()
@@ -56,11 +60,28 @@ namespace Parse.Sharp.Tests.Parsers
       AssertFailure(Parse.LetterChar, input: "1", expectedMessage: "letter character expected, got '1'");
     }
 
+    [Test] public void PredicateCharacterIgnoreCase()
+    {
+      var parser = Parse.Char(x => x == 'a', "simple 'a' character").IgnoreCase();
+      Assert.IsTrue(ReferenceEquals(parser.IgnoreCase(), parser));
+
+      AssertParse(parser, "a", 'a');
+      AssertParse(parser, "A", 'A');
+      AssertFailure(parser, "x", "simple 'a' character expected, got 'x'");
+
+      var exceptParser = Parse.CharExcept(x => x == 'a', "not 'a' character").IgnoreCase();
+      Assert.IsTrue(ReferenceEquals(exceptParser.IgnoreCase(), exceptParser));
+
+      AssertParse(exceptParser, "b", 'b');
+      AssertParse(exceptParser, "B", 'B');
+      AssertFailure(exceptParser, "a", "not 'a' character expected, got 'a'");
+      AssertFailure(exceptParser, "A", "not 'a' character expected, got 'A'");
+    }
+
     [Test] public void PredicateCharacterExcept()
     {
       var parser = Parse.CharExcept(
-        predicate: ch => (ch == '\'' || ch == '"'),
-        description: "not quote");
+        predicate: ch => (ch == '\'' || ch == '"'), description: "not quote");
 
       AssertParse(parser, "a", 'a');
       AssertParse(parser, "1", '1');

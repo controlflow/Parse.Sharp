@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 using Parse.Sharp.Parsers;
 using Parse.Sharp.Parsers.Combinators;
@@ -43,13 +42,12 @@ namespace Parse.Sharp
       return new ParseAttempt(parseResult.FailPoint, parseResult.Offset);
     }
 
-    
-
+    [DebuggerDisplay("{ToString()}")]
     protected internal struct ParseResult
     {
-      private readonly T myValue;
-      private readonly int myOffset;
-      private readonly IFailPoint myFailPoint;
+      [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly T myValue;
+      [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly int myOffset;
+      [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly IFailPoint myFailPoint;
 
       public ParseResult(T value, int nextOffset)
       {
@@ -70,13 +68,27 @@ namespace Parse.Sharp
       public T Value { get { return myValue; } }
       public int Offset { get { return myOffset; } }
       public IFailPoint FailPoint { get { return myFailPoint; } }
+
+      public override string ToString()
+      {
+        return IsSuccessful
+          ? string.Format("Success@{0}: {1}", Offset, Value)
+          : string.Format("Failure@{0}: {1}", Offset, FailPoint.GetExpectedMessage());
+      }
     }
 
+    // todo: non-virtual interface
+    // todo: to property?
     [Pure, NotNull]
     public virtual Parser<T> IgnoreCase()
     {
       return this;
     }
+
+    //public override Parser IgnoreCase()
+    //{
+    //  return 
+    //}
 
     // utils:
 
@@ -94,6 +106,14 @@ namespace Parse.Sharp
       }
 
       return expected + " expected, got '" + ReplaceNewLines(tail) + "'";
+    }
+
+    protected static char InvertCharCase(char ch)
+    {
+      var lower = char.ToLowerInvariant(ch);
+      if (lower != ch) return lower;
+
+      return char.ToUpperInvariant(ch);
     }
 
 
@@ -267,10 +287,11 @@ namespace Parse.Sharp
   {
     protected internal abstract ParseAttempt TryParseVoid([NotNull] string input, int offset);
 
+    [DebuggerDisplay("{ToString()}")]
     protected internal struct ParseAttempt
     {
-      private readonly int myOffset;
-      private readonly IFailPoint myFailPoint;
+      [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly int myOffset;
+      [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly IFailPoint myFailPoint;
 
       public ParseAttempt(int nextOffset)
       {
@@ -288,6 +309,13 @@ namespace Parse.Sharp
 
       public int Offset { get { return myOffset; } }
       public IFailPoint FailPoint { get { return myFailPoint; } }
+
+      public override string ToString()
+      {
+        return IsSuccessful
+          ? string.Format("Success@{0}", Offset)
+          : string.Format("Failure@{0}: {1}", Offset, FailPoint.GetExpectedMessage());
+      }
     }
 
 
@@ -326,5 +354,7 @@ namespace Parse.Sharp
       if (AssertAvoidParserAllocations)
         throw new ArgumentException("Parser allocation");
     }
+
+    //public abstract Parser IgnoreCase();
   }
 }

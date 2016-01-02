@@ -50,13 +50,13 @@ namespace Parse.Sharp
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> Char([NotNull] Predicate<char> predicate, [NotNull] string description)
     {
-      return new PredicateCharacterParser(predicate, description, isNegative: false);
+      return new PredicateCharacterParser(predicate, description, isExcept: false);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> CharExcept([NotNull] Predicate<char> predicate, [NotNull] string description)
     {
-      return new PredicateCharacterParser(predicate, description, isNegative: true);
+      return new PredicateCharacterParser(predicate, description, isExcept: true);
     }
 
     // character set:

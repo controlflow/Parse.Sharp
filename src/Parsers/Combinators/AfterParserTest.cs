@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
 {
@@ -30,6 +31,12 @@ namespace Parse.Sharp.Parsers.Combinators
       }
 
       return firstResult;
+    }
+
+    public override Parser<T> IgnoreCase()
+    {
+      throw new NotImplementedException();
+      //return new AfterParserTest<T>(myFirstParser.IgnoreCase(), myNextParser.IgnoreCase());
     }
   }
 }

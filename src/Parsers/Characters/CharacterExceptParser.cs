@@ -27,13 +27,9 @@ namespace Parse.Sharp.Parsers.Characters
 
     public override Parser<char> IgnoreCase()
     {
-      var lower = char.ToLowerInvariant(myCharacter);
-      if (lower != myCharacter)
-        return new CharacterSetParser(new[] {lower, myCharacter}, description: null, isExcept: true);
-
-      var upper = char.ToUpperInvariant(myCharacter);
-      if (upper != myCharacter)
-        return new CharacterSetParser(new[] {myCharacter, upper}, description: null, isExcept: true);
+      var alternative = InvertCharCase(myCharacter);
+      if (alternative != myCharacter)
+        return new IgnoreCaseCharacterExceptParser(myCharacter, alternative);
 
       return this;
     }
@@ -42,6 +38,40 @@ namespace Parse.Sharp.Parsers.Characters
     {
       // ReSharper disable once RedundantToStringCallForValueType
       return "not '" + myCharacter.ToString() + "'";
+    }
+
+    private sealed class IgnoreCaseCharacterExceptParser : Parser<char>, IFailPoint
+    {
+      private readonly char myCharacter;
+      private readonly char myAltCharacter;
+
+      public IgnoreCaseCharacterExceptParser(char character, char altCharacter)
+      {
+        myCharacter = character;
+        myAltCharacter = altCharacter;
+
+        AssertParserAllocation();
+      }
+
+      protected internal override ParseResult TryParseValue(string input, int offset)
+      {
+        if (offset < input.Length)
+        {
+          var ch = input[offset];
+          if (ch != myCharacter & ch != myAltCharacter)
+          {
+            return new ParseResult(value: ch, nextOffset: offset + 1);
+          }
+        }
+
+        return new ParseResult(failPoint: this, atOffset: offset);
+      }
+
+      public string GetExpectedMessage()
+      {
+        // ReSharper disable once RedundantToStringCallForValueType
+        return "not '" + myCharacter.ToString() + "'";
+      }
     }
   }
 }

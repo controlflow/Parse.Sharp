@@ -3,17 +3,16 @@ using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Characters
 {
-  internal sealed class PredicateCharacterParser : Parser<char>, Parser.IFailPoint
+  internal sealed class PredicateCharacterParser : ParserWithDescription<char>
   {
     [NotNull] private readonly Predicate<char> myPredicate;
-    [NotNull] private readonly string myDescription;
-    private readonly bool myIsNegative;
+    private readonly bool myIsExcept;
 
-    public PredicateCharacterParser([NotNull] Predicate<char> predicate, [NotNull] string description, bool isNegative)
+    public PredicateCharacterParser([NotNull] Predicate<char> predicate, [NotNull] string description, bool isExcept)
+      : base(description)
     {
       myPredicate = predicate;
-      myDescription = description;
-      myIsNegative = isNegative;
+      myIsExcept = isExcept;
 
       AssertParserAllocation();
     }
@@ -23,7 +22,8 @@ namespace Parse.Sharp.Parsers.Characters
       if (offset < input.Length)
       {
         var ch = input[offset];
-        if (myPredicate(ch) != myIsNegative)
+        var match = myPredicate(ch);
+        if (match != myIsExcept)
         {
           return new ParseResult(value: ch, nextOffset: offset + 1);
         }
@@ -32,9 +32,32 @@ namespace Parse.Sharp.Parsers.Characters
       return new ParseResult(failPoint: this, atOffset: offset);
     }
 
-    public string GetExpectedMessage()
+    public override Parser<char> IgnoreCase()
     {
-      return myDescription;
+      if (myPredicate.Target is IgnoreCasePredicate) return this;
+
+      var predicate = new IgnoreCasePredicate(myPredicate);
+      return new PredicateCharacterParser(predicate.IgnoreCase, Description, myIsExcept);
+    }
+
+    private sealed class IgnoreCasePredicate
+    {
+      [NotNull] private readonly Predicate<char> myPredicate;
+
+      public IgnoreCasePredicate([NotNull] Predicate<char> predicate)
+      {
+        myPredicate = predicate;
+      }
+
+      public bool IgnoreCase(char ch)
+      {
+        if (myPredicate(ch)) return true;
+
+        var alternative = InvertCharCase(ch);
+        if (alternative == ch) return false;
+
+        return myPredicate(alternative);
+      }
     }
   }
 }

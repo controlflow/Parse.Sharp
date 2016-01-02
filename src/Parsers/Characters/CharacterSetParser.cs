@@ -43,6 +43,35 @@ namespace Parse.Sharp.Parsers.Characters
       return new ParseResult(failPoint: this, atOffset: offset);
     }
 
+    // todo: test!
+    public override Parser<char> IgnoreCase()
+    {
+      var count = 0;
+
+      foreach (var character in myCharacters)
+      {
+        var alternative = InvertCharCase(character);
+        if (alternative != character) count ++;
+      }
+
+      if (count == 0) return this;
+
+      var index = 0;
+      var newCharacters = new char[myCharacters.Length + count];
+
+      foreach (var character in myCharacters)
+      {
+        newCharacters[index++] = character;
+
+        var alternative = InvertCharCase(character);
+        if (alternative != character)
+          newCharacters[index++] = alternative;
+      }
+
+      var forcedDescription = GetExpectedMessage();
+      return new CharacterSetParser(newCharacters, forcedDescription, myIsExcept);
+    }
+
     public string GetExpectedMessage()
     {
       if (myDescription == null)

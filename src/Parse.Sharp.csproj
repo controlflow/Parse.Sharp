@@ -35,7 +35,6 @@
   <ItemGroup>
     <Compile Include="Parsers\Characters\CharacterExceptParser.cs" />
     <Compile Include="Parsers\Characters\CharacterSetParser.cs" />
-    <Compile Include="Parsers\Characters\IgnoreCaseCharactersParser.cs" />
     <Compile Include="Parsers\Combinators\AggregateParser.cs" />
     <Compile Include="Parsers\Combinators\BeforeParserTest.cs" />
     <Compile Include="Parsers\Combinators\ChoiceParser.cs" />
@@ -56,6 +55,7 @@
     <Compile Include="Parsers\Characters\PredicateCharacterParser.cs" />
     <Compile Include="Parsers\Strings\ManyToStringParser.cs" />
     <Compile Include="Parsers\Strings\StringParser.cs" />
+    <Compile Include="ParserWithDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsers\Combinators\SelectParser.cs" />
     <Compile Include="Parsers\Combinators\SequentialParser.cs" />
