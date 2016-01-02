@@ -1,14 +1,15 @@
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
 {
-  internal sealed class SurroundParserTest<T> : Parser<T>
+  internal sealed class SurroundParser<T> : Parser<T>
   {
     [NotNull] private readonly Parser myFirstParser;
     [NotNull] private readonly Parser<T> myNextParser;
     [NotNull] private readonly Parser myLastParser;
 
-    public SurroundParserTest([NotNull] Parser firstParser, [NotNull] Parser<T> nextParser, [NotNull] Parser lastParser)
+    public SurroundParser([NotNull] Parser firstParser, [NotNull] Parser<T> nextParser, [NotNull] Parser lastParser)
     {
       myFirstParser = firstParser;
       myNextParser = nextParser;
@@ -40,4 +41,9 @@ namespace Parse.Sharp.Parsers.Combinators
       return new ParseResult(firstResult.FailPoint, firstResult.Offset);
     }
   }
+
+  //internal sealed class SequenceParser<T>
+  //{
+  //  
+  //}
 }

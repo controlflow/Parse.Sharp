@@ -3,6 +3,31 @@ using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
 {
+  internal sealed class SelectParser<T> : Parser<T>
+  {
+    [NotNull] private readonly Parser myUnderlyingParser;
+    private readonly T mySelectValue;
+
+    public SelectParser([NotNull] Parser underlyingParser, T selectValue)
+    {
+      myUnderlyingParser = underlyingParser;
+      mySelectValue = selectValue;
+
+      AssertParserAllocation();
+    }
+
+    protected internal override ParseResult TryParseValue(string input, int offset)
+    {
+      var result = myUnderlyingParser.TryParseVoid(input, offset);
+      if (result.IsSuccessful)
+      {
+        return new ParseResult(value: mySelectValue, nextOffset: result.Offset);
+      }
+
+      return new ParseResult(failPoint: result.FailPoint, atOffset: result.Offset);
+    }
+  }
+
   internal sealed class SelectParser<T, TResult> : Parser<TResult>
   {
     [NotNull] private readonly Parser<T> myUnderlyingParser;

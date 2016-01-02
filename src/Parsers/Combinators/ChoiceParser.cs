@@ -56,4 +56,7 @@ namespace Parse.Sharp.Parsers.Combinators
       }
     }
   }
+
+  // todo: choice of array
+  // todo: normalization of same-level choices
 }

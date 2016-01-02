@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using JetBrains.Annotations;
 using Parse.Sharp.Parsers;
 using Parse.Sharp.Parsers.Combinators;
@@ -97,12 +98,12 @@ namespace Parse.Sharp
 
     [NotNull, Pure] public Parser<T> SurroundWith([NotNull] Parser headAndTailParser)
     {
-      return new SurroundParserTest<T>(headAndTailParser, this, headAndTailParser);
+      return new SurroundParser<T>(headAndTailParser, this, headAndTailParser);
     }
 
     [NotNull, Pure] public Parser<T> SurroundWith([NotNull] Parser headParser, [NotNull] Parser tailParser)
     {
-      return new SurroundParserTest<T>(headParser, this, tailParser);
+      return new SurroundParser<T>(headParser, this, tailParser);
     }
 
     [NotNull, Pure] public Parser<T> WithTail([NotNull] Parser tailParser)
@@ -114,7 +115,7 @@ namespace Parse.Sharp
     {
       // todo: whitespace.many()
       var whitespace = Sharp.Parse.WhitespaceChar;
-      return new SurroundParserTest<T>(whitespace, this, whitespace);
+      return new SurroundParser<T>(whitespace, this, whitespace);
     }
 
     [NotNull, Pure] public Parser<T> WhitespaceAfter()
@@ -133,20 +134,37 @@ namespace Parse.Sharp
 
     // query syntax support:
 
-    [Pure, NotNull] public Parser<TResult> Select<TResult>([NotNull] Func<T, TResult> selector)
+    [Pure, NotNull, DebuggerStepThrough]
+    public Parser<TResult> Select<TResult>([NotNull] Func<T, TResult> selector)
     {
       return new SelectParser<T, TResult>(this, selector);
     }
 
-    [Pure, NotNull] public Parser<TResult> SelectMany<TResult>([NotNull] Func<T, Parser<TResult>> nextParser)
+    [Pure, NotNull, DebuggerStepThrough]
+    public Parser<TResult> SelectMany<TResult>([NotNull] Func<T, Parser<TResult>> nextParser)
     {
       return new SequentialParser<T, TResult>(this, nextParser);
     }
 
-    [Pure, NotNull] public Parser<TResult> SelectMany<TNext, TResult>(
+    [Pure, NotNull, DebuggerStepThrough]
+    public Parser<TResult> SelectMany<TNext, TResult>(
       [NotNull] Func<T, Parser<TNext>> nextParser, [NotNull] Func<T, TNext, TResult> selector)
     {
       return new SequentialParser<T, TNext, TResult>(this, nextParser, selector);
+    }
+
+    [Pure, NotNull, DebuggerStepThrough]
+    public Parser<TAccumulate> Aggregate<TAccumulate>(
+      TAccumulate seed, [NotNull] Func<TAccumulate, T, TAccumulate> fold)
+    {
+      return new AggregateParser<T, TAccumulate>(this, () => seed, fold);
+    }
+
+    [Pure, NotNull, DebuggerStepThrough]
+    public Parser<TAccumulate> Aggregate<TAccumulate>(
+      [NotNull] Func<TAccumulate> seedFactory, [NotNull] Func<TAccumulate, T, TAccumulate> fold)
+    {
+      return new AggregateParser<T, TAccumulate>(this, seedFactory, fold);
     }
 
     // combinators:
@@ -266,6 +284,13 @@ namespace Parse.Sharp
       public IFailPoint FailPoint { get { return myFailPoint; } }
     }
 
+
+
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> Select<T>(T value)
+    {
+      return new SelectParser<T>(this, value);
+    }
 
 
     private static readonly string[] NewLineStrings = {

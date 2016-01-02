@@ -59,7 +59,7 @@ namespace Parse.Sharp
       return new PredicateCharacterParser(predicate, description, isNegative: true);
     }
 
-    // character sets:
+    // character set:
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> Chars([NotNull] string characters)
@@ -97,6 +97,7 @@ namespace Parse.Sharp
       return new CharacterSetParser(characters, description, isNegative: true);
     }
 
+    // todo: .CharsIgnoreCase?
 
     // + ManyCharacters()
 
