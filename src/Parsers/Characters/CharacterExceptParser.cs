@@ -1,10 +1,10 @@
 namespace Parse.Sharp.Parsers.Characters
 {
-  internal sealed class CharacterParser : Parser<char>, Parser.IFailPoint
+  internal sealed class CharacterExceptParser : Parser<char>, Parser.IFailPoint
   {
     private readonly char myCharacter;
 
-    public CharacterParser(char character)
+    public CharacterExceptParser(char character)
     {
       myCharacter = character;
 
@@ -13,9 +13,13 @@ namespace Parse.Sharp.Parsers.Characters
 
     protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      if (offset < input.Length && input[offset] == myCharacter)
+      if (offset < input.Length)
       {
-        return new ParseResult(value: myCharacter, nextOffset: offset + 1);
+        var ch = input[offset];
+        if (ch != myCharacter)
+        {
+          return new ParseResult(value: ch, nextOffset: offset + 1);
+        }
       }
 
       return new ParseResult(failPoint: this, atOffset: offset);
@@ -24,7 +28,7 @@ namespace Parse.Sharp.Parsers.Characters
     public string GetExpectedMessage()
     {
       // ReSharper disable once RedundantToStringCallForValueType
-      return "'" + myCharacter.ToString() + "'";
+      return "not '" + myCharacter.ToString() + "'";
     }
   }
 }

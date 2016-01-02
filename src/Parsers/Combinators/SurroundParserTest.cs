@@ -1,16 +1,18 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
 {
-  internal sealed class BeforeParserTest<T> : Parser<T>
+  internal sealed class SurroundParserTest<T> : Parser<T>
   {
     [NotNull] private readonly Parser myFirstParser;
     [NotNull] private readonly Parser<T> myNextParser;
+    [NotNull] private readonly Parser myLastParser;
 
-    public BeforeParserTest([NotNull] Parser firstParser, [NotNull] Parser<T> nextParser)
+    public SurroundParserTest([NotNull] Parser firstParser, [NotNull] Parser<T> nextParser, [NotNull] Parser lastParser)
     {
       myFirstParser = firstParser;
       myNextParser = nextParser;
+      myLastParser = lastParser;
 
       AssertParserAllocation();
     }
@@ -23,7 +25,13 @@ namespace Parse.Sharp.Parsers.Combinators
         var nextResult = myNextParser.TryParseValue(input, firstResult.Offset);
         if (nextResult.IsSuccessful)
         {
-          return nextResult;
+          var lastResult = myLastParser.TryParseVoid(input, nextResult.Offset);
+          if (lastResult.IsSuccessful)
+          {
+            return new ParseResult(nextResult.Value, lastResult.Offset);
+          }
+
+          return new ParseResult(lastResult.FailPoint, lastResult.Offset);
         }
 
         return new ParseResult(nextResult.FailPoint, nextResult.Offset);

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using JetBrains.Annotations;
 using Parse.Sharp.Parsers;
 using Parse.Sharp.Parsers.Combinators;
@@ -89,11 +90,46 @@ namespace Parse.Sharp
     }
 
 
-    [NotNull, Pure]
-    public Parser<string> ManyToString([CanBeNull] string description = null)
+    [NotNull, Pure] public Parser<string> ManyToString([CanBeNull] string description = null)
     {
       return new ManyToStringParser(this, description);
     }
+
+    [NotNull, Pure] public Parser<T> SurroundWith([NotNull] Parser headAndTailParser)
+    {
+      return new SurroundParserTest<T>(headAndTailParser, this, headAndTailParser);
+    }
+
+    [NotNull, Pure] public Parser<T> SurroundWith([NotNull] Parser headParser, [NotNull] Parser tailParser)
+    {
+      return new SurroundParserTest<T>(headParser, this, tailParser);
+    }
+
+    [NotNull, Pure] public Parser<T> WithTail([NotNull] Parser tailParser)
+    {
+      return new AfterParserTest<T>(this, tailParser);
+    }
+
+    [NotNull, Pure] public Parser<T> Token()
+    {
+      // todo: whitespace.many()
+      var whitespace = Sharp.Parse.WhitespaceChar;
+      return new SurroundParserTest<T>(whitespace, this, whitespace);
+    }
+
+    [NotNull, Pure] public Parser<T> WhitespaceAfter()
+    {
+      // todo: whitespace.many()
+      return new AfterParserTest<T>(this, Sharp.Parse.WhitespaceChar);
+    }
+
+    [NotNull, Pure] public Parser<T> WhitespaceBefore()
+    {
+      // todo: whitespace.many()
+      return new AfterParserTest<T>(this, Sharp.Parse.WhitespaceChar);
+    }
+
+
 
     // query syntax support:
 
@@ -151,6 +187,8 @@ namespace Parse.Sharp
         myUnderlyingParser = parser;
         myMin = min;
         myMax = max;
+
+        AssertParserAllocation();
       }
 
       protected internal override ParseResult TryParseValue(string input, int offset)
@@ -203,12 +241,6 @@ namespace Parse.Sharp
 
   public abstract class Parser
   {
-    //[NotNull, Pure]
-    //protected internal virtual string GetExpectedMessage()
-    //{
-    //  throw new InvalidOperationException("Should not be invoked");
-    //}
-
     protected internal abstract ParseAttempt TryParseVoid([NotNull] string input, int offset);
 
     protected internal struct ParseAttempt
@@ -254,6 +286,14 @@ namespace Parse.Sharp
     protected internal interface IFailPoint
     {
       [NotNull] string GetExpectedMessage();
+    }
+
+    [ThreadStatic] internal static bool AssertAvoidParserAllocations;
+
+    protected static void AssertParserAllocation()
+    {
+      if (AssertAvoidParserAllocations)
+        throw new ArgumentException("Parser allocation");
     }
   }
 }

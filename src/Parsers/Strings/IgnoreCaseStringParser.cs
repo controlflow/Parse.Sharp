@@ -10,6 +10,8 @@ namespace Parse.Sharp.Parsers.Strings
     public IgnoreCaseStringParser([NotNull] string text)
     {
       myText = text;
+
+      AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)
@@ -33,6 +35,8 @@ namespace Parse.Sharp.Parsers.Strings
 
       return new ParseResult(failPoint: this, atOffset: offset);
     }
+
+    // tood: allocationless version
 
     public string GetExpectedMessage()
     {

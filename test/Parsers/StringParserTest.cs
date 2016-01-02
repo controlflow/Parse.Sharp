@@ -2,18 +2,20 @@
 
 namespace Parse.Sharp.Tests.Parsers
 {
-  [TestFixture]
-  public sealed class StringParserTest : ParserTest
+  [TestFixture] public sealed class StringParserTest : ParserTest
   {
     [Test] public void BasicStrings()
     {
       AssertParse(Parse.String("class"), "class", "class");
       AssertParse(Parse.IgnoreCaseString("class"), "ClaSS", "ClaSS");
 
+      var lq = Parse.Char('{');
+      var rq = Parse.Char('}');
+
       AssertParse(
         parser: from kw in Parse.String("class")
-                from lb in Parse.Char('{')
-                from rb in Parse.Char('}')
+                from lb in lq
+                from rb in rq
                 select true,
         input: "class{}");
     }

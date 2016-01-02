@@ -11,6 +11,8 @@ namespace Parse.Sharp.Parsers.Combinators
     {
       myUnderlyingParser = underlyingParser;
       myDescription = description;
+
+      AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)

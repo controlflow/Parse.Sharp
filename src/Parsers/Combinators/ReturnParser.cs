@@ -7,6 +7,8 @@
     public ReturnParser(T value)
     {
       myValue = value;
+
+      AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)

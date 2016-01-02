@@ -2,8 +2,7 @@
 
 namespace Parse.Sharp.Tests.Parsers
 {
-  [TestFixture]
-  public sealed class NotParserTest : ParserTest
+  [TestFixture] public sealed class NotParserTest : ParserTest
   {
     [Test] public void NotCombinator()
     {

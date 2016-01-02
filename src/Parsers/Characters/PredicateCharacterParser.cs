@@ -7,11 +7,15 @@ namespace Parse.Sharp.Parsers.Characters
   {
     [NotNull] private readonly Predicate<char> myPredicate;
     [NotNull] private readonly string myDescription;
+    private readonly bool myIsNegative;
 
-    public PredicateCharacterParser([NotNull] Predicate<char> predicate, [NotNull] string description)
+    public PredicateCharacterParser([NotNull] Predicate<char> predicate, [NotNull] string description, bool isNegative)
     {
       myPredicate = predicate;
       myDescription = description;
+      myIsNegative = isNegative;
+
+      AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)
@@ -19,7 +23,7 @@ namespace Parse.Sharp.Parsers.Characters
       if (offset < input.Length)
       {
         var ch = input[offset];
-        if (myPredicate(ch))
+        if (myPredicate(ch) != myIsNegative)
         {
           return new ParseResult(value: ch, nextOffset: offset + 1);
         }

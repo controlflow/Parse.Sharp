@@ -11,8 +11,11 @@ namespace Parse.Sharp.Tests
       Assert.NotNull(parser, "parser != null");
       Assert.NotNull(input, "input != null");
 
-      var parsedValue = parser.Parse(input);
-      GC.KeepAlive(parsedValue);
+      using (Parse.AssertNoAllocations())
+      {
+        var parsedValue = parser.Parse(input);
+        GC.KeepAlive(parsedValue);
+      }
     }
 
     public static void AssertParse<T>([NotNull] Parser<T> parser, [NotNull] string input, T expectedValue)
@@ -20,16 +23,20 @@ namespace Parse.Sharp.Tests
       Assert.NotNull(parser, "parser != null");
       Assert.NotNull(input, "input != null");
 
-      var parsedValue = parser.Parse(input);
-      Assert.AreEqual(parsedValue, expectedValue);
+      using (Parse.AssertNoAllocations())
+      {
+        var parsedValue = parser.Parse(input);
+        Assert.AreEqual(parsedValue, expectedValue);
+      }
     }
 
     public static void AssertFailure<T>(
-      [NotNull] Parser<T> parser, [NotNull] string input, [NotNull] string expectedMessage, int failureOffset)
+      [NotNull] Parser<T> parser, [NotNull] string input, [NotNull] string expectedMessage, int failureOffset = 0)
     {
       Assert.NotNull(parser, "parser != null");
       Assert.NotNull(input, "input != null");
 
+      using (Parse.AssertNoAllocations())
       try
       {
         var result = parser.Parse(input);

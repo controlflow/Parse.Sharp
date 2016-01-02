@@ -11,6 +11,8 @@ namespace Parse.Sharp.Parsers.Combinators
     {
       myLeft = left;
       myRight = right;
+
+      AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)

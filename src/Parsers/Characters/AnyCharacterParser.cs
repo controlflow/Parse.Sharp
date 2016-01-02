@@ -1,7 +1,12 @@
-﻿namespace Parse.Sharp.Parsers.Characters
+﻿using JetBrains.Annotations;
+
+namespace Parse.Sharp.Parsers.Characters
 {
   internal sealed class AnyCharacterParser : Parser<char>, Parser.IFailPoint
   {
+    [NotNull] public static readonly Parser<char> Instance = new AnyCharacterParser();
+    private AnyCharacterParser() { }
+
     protected internal override ParseResult TryParseValue(string input, int offset)
     {
       if (offset < input.Length)

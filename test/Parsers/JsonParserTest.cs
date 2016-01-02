@@ -17,13 +17,14 @@ namespace Parse.Sharp.Tests.Parsers
       select contents;
 
     private static readonly Parser<ObjLiteral> ObjectLiteral =
-      from lBrace in Parse.Char('{') // +ws
+      from lBrace in Parse.Char('{').WhitespaceAfter()
       from properties in (
-           from propertyName in StringLiteral // +ws
-           from colon in Parse.Char(':') // +ws
-           from propertyValue in PropertyValue // +ws
+           from propertyName in StringLiteral
+           from colon in Parse.Char(':').Token()
+           from propertyValue in PropertyValue
            select new KeyValuePair<string, object>(propertyName, propertyValue)
          )
+         // + ws
          // todo: .Many()/.CommaSeparated()
          .Select(x => new[] { x }.AsEnumerable())
          .Select(xs => xs.ToDictionary(x => x.Key, x => x.Value))
@@ -32,7 +33,7 @@ namespace Parse.Sharp.Tests.Parsers
       select new ObjLiteral(properties);
 
     private static readonly Parser<object[]> ArrayLiteral =
-      from lBrace in Parse.Char('[')
+      from lBrace in Parse.Char('[').WhitespaceAfter()
       from items in (
         from value in PropertyValue // +ws
         select value

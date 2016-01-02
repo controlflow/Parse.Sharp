@@ -11,6 +11,8 @@ namespace Parse.Sharp.Parsers.Strings
     {
       myContentsParser = contentsParser;
       myDescription = description;
+
+      AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)
@@ -18,10 +20,10 @@ namespace Parse.Sharp.Parsers.Strings
       var innerOffset = offset;
       for (; innerOffset < input.Length; )
       {
-        var nextOffset = myContentsParser.TryParseVoid(input, innerOffset);
-        if (nextOffset < 0) break;
+        var nextResult = myContentsParser.TryParseVoid(input, innerOffset);
+        if (!nextResult.IsSuccessful) break;
 
-        innerOffset = (nextOffset > innerOffset) ? nextOffset : innerOffset + 1;
+        innerOffset = (nextResult.Offset > innerOffset) ? nextResult.Offset : innerOffset + 1;
       }
 
       var value = input.Substring(startIndex: offset, length: innerOffset - offset);

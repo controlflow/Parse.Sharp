@@ -33,12 +33,15 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Parsers\Characters\CharacterExceptParser.cs" />
+    <Compile Include="Parsers\Characters\CharacterSetParser.cs" />
     <Compile Include="Parsers\Combinators\BeforeParserTest.cs" />
     <Compile Include="Parsers\Combinators\ChoiceParser.cs" />
     <Compile Include="Parsers\Combinators\AfterParserTest.cs" />
     <Compile Include="Parsers\Combinators\NonEmptyParser.cs" />
     <Compile Include="Parsers\Combinators\ReturnParser.cs" />
     <Compile Include="Parsers\Combinators\OptionalParser.cs" />
+    <Compile Include="Parsers\Combinators\SurroundParserTest.cs" />
     <Compile Include="Parsers\Strings\IgnoreCaseStringParser.cs" />
     <Compile Include="Parsers\NotParser.cs" />
     <Compile Include="Parsers\Characters\AnyCharacterParser.cs" />

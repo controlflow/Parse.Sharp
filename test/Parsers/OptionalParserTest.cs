@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Parse.Sharp.Tests.Parsers
 {
-  [TestFixture]
-  public sealed class OptionalParserTest
+  [TestFixture] public sealed class OptionalParserTest
   {
-    [Test] public void M()
+    [Test] public void Optional()
     {
       
     }

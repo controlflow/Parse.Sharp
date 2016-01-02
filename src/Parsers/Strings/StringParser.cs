@@ -10,6 +10,8 @@ namespace Parse.Sharp.Parsers.Strings
     public StringParser([NotNull] string @string)
     {
       myString = @string;
+
+      AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)
