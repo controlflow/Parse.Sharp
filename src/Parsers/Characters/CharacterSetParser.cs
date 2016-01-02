@@ -44,7 +44,7 @@ namespace Parse.Sharp.Parsers.Characters
     }
 
     // todo: test!
-    public override Parser<char> IgnoreCase()
+    protected override Parser<char> CreateIgnoreCaseParser()
     {
       var count = 0;
 

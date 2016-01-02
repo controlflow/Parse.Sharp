@@ -60,6 +60,17 @@ namespace Parse.Sharp.Tests.Parsers
       AssertFailure(Parse.LetterChar, input: "1", expectedMessage: "letter character expected, got '1'");
     }
 
+    [Test] public void PredicateCharacterExcept()
+    {
+      var parser = Parse.CharExcept(
+        predicate: ch => (ch == '\'' || ch == '"'), description: "not quote");
+
+      AssertParse(parser, "a", 'a');
+      AssertParse(parser, "1", '1');
+
+      AssertFailure(parser, input: "''\"", expectedMessage: "not quote expected, got '''\"'");
+    }
+
     [Test] public void PredicateCharacterIgnoreCase()
     {
       var parser = Parse.Char(x => x == 'a', "simple 'a' character").IgnoreCase();
@@ -76,17 +87,6 @@ namespace Parse.Sharp.Tests.Parsers
       AssertParse(exceptParser, "B", 'B');
       AssertFailure(exceptParser, "a", "not 'a' character expected, got 'a'");
       AssertFailure(exceptParser, "A", "not 'a' character expected, got 'A'");
-    }
-
-    [Test] public void PredicateCharacterExcept()
-    {
-      var parser = Parse.CharExcept(
-        predicate: ch => (ch == '\'' || ch == '"'), description: "not quote");
-
-      AssertParse(parser, "a", 'a');
-      AssertParse(parser, "1", '1');
-
-      AssertFailure(parser, input: "''\"", expectedMessage: "not quote expected, got '''\"'");
     }
 
     [Test] public void CharactersSet1()
@@ -122,6 +122,12 @@ namespace Parse.Sharp.Tests.Parsers
       AssertFailure(parser, input: "a", expectedMessage: "digit expected, got 'a'");
     }
 
-    // todo: characters set
+    [Test] public void CharactersSetIgnoreCase()
+    {
+      var parser = Parse.Chars("01234567abcdef").ManyToString().IgnoreCase();
+      Assert.IsTrue(ReferenceEquals(parser.IgnoreCase(), parser));
+
+      AssertParse(parser, "aAbBcCdDeEfF0123456789");
+    }
   }
 }

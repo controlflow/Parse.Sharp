@@ -26,6 +26,14 @@ namespace Parse.Sharp.Parsers.Combinators
 
       return new ParseResult(failPoint: result.FailPoint, atOffset: result.Offset);
     }
+
+    protected override Parser<T> CreateIgnoreCaseParser()
+    {
+      var ignoreCaseParser = myUnderlyingParser.IgnoreCase();
+      if (ReferenceEquals(myUnderlyingParser, ignoreCaseParser)) return this;
+
+      return new SelectParser<T>(ignoreCaseParser, mySelectValue);
+    }
   }
 
   internal sealed class SelectParser<T, TResult> : Parser<TResult>
@@ -50,6 +58,14 @@ namespace Parse.Sharp.Parsers.Combinators
       }
 
       return new ParseResult(failPoint: result.FailPoint, atOffset: result.Offset);
+    }
+
+    protected override Parser<TResult> CreateIgnoreCaseParser()
+    {
+      var ignoreCaseParser = myUnderlyingParser.IgnoreCase();
+      if (ReferenceEquals(myUnderlyingParser, ignoreCaseParser)) return this;
+
+      return new SelectParser<T, TResult>(ignoreCaseParser, mySelector);
     }
   }
 }

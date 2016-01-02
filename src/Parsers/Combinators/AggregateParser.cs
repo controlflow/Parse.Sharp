@@ -3,6 +3,8 @@ using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
 {
+  // todo: result selector?
+
   internal sealed class AggregateParser<T, TAccumulate> : Parser<TAccumulate>
   {
     [NotNull] private readonly Parser<T> myUnderlyingParser;
@@ -42,6 +44,14 @@ namespace Parse.Sharp.Parsers.Combinators
         acc = myFold(acc, result.Value);
         offset = nextOffset;
       }
+    }
+
+    protected override Parser<TAccumulate> CreateIgnoreCaseParser()
+    {
+      var ignoreCaseParser = myUnderlyingParser.IgnoreCase();
+      if (ReferenceEquals(myUnderlyingParser, ignoreCaseParser)) return this;
+
+      return new AggregateParser<T, TAccumulate>(ignoreCaseParser, mySeedFactory, myFold);
     }
   }
 }

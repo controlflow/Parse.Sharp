@@ -1,49 +1,59 @@
-using System.Linq;
 using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class SurroundParser<T> : Parser<T>
   {
-    [NotNull] private readonly Parser myFirstParser;
+    [NotNull] private readonly Parser myHeadParser;
     [NotNull] private readonly Parser<T> myNextParser;
-    [NotNull] private readonly Parser myLastParser;
+    [NotNull] private readonly Parser myTailParser;
 
-    public SurroundParser([NotNull] Parser firstParser, [NotNull] Parser<T> nextParser, [NotNull] Parser lastParser)
+    public SurroundParser([NotNull] Parser headParser, [NotNull] Parser<T> nextParser, [NotNull] Parser tailParser)
     {
-      myFirstParser = firstParser;
+      myHeadParser = headParser;
       myNextParser = nextParser;
-      myLastParser = lastParser;
+      myTailParser = tailParser;
 
       AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var firstResult = myFirstParser.TryParseVoid(input, offset);
-      if (firstResult.IsSuccessful)
+      var headResult = myHeadParser.TryParseVoid(input, offset);
+      if (headResult.IsSuccessful)
       {
-        var nextResult = myNextParser.TryParseValue(input, firstResult.Offset);
+        var nextResult = myNextParser.TryParseValue(input, headResult.Offset);
         if (nextResult.IsSuccessful)
         {
-          var lastResult = myLastParser.TryParseVoid(input, nextResult.Offset);
-          if (lastResult.IsSuccessful)
+          var tailResult = myTailParser.TryParseVoid(input, nextResult.Offset);
+          if (tailResult.IsSuccessful)
           {
-            return new ParseResult(nextResult.Value, lastResult.Offset);
+            return new ParseResult(nextResult.Value, tailResult.Offset);
           }
 
-          return new ParseResult(lastResult.FailPoint, lastResult.Offset);
+          return new ParseResult(tailResult.FailPoint, tailResult.Offset);
         }
 
         return new ParseResult(nextResult.FailPoint, nextResult.Offset);
       }
 
-      return new ParseResult(firstResult.FailPoint, firstResult.Offset);
+      return new ParseResult(headResult.FailPoint, headResult.Offset);
+    }
+
+    protected override Parser<T> CreateIgnoreCaseParser()
+    {
+      var ignoreCaseHeadParser = myHeadParser.IgnoreCase();
+      var ignoreCaseNextParser = myNextParser.IgnoreCase();
+      var ignoreCaseTailParser = myTailParser.IgnoreCase();
+
+      if (ReferenceEquals(myHeadParser, ignoreCaseHeadParser) &&
+          ReferenceEquals(myNextParser, ignoreCaseNextParser) &&
+          ReferenceEquals(myTailParser, ignoreCaseTailParser))
+      {
+        return this;
+      }
+
+      return new SurroundParser<T>(ignoreCaseHeadParser, ignoreCaseNextParser, ignoreCaseTailParser);
     }
   }
-
-  //internal sealed class SequenceParser<T>
-  //{
-  //  
-  //}
 }

@@ -5,38 +5,46 @@ namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class AfterParserTest<T> : Parser<T>
   {
-    [NotNull] private readonly Parser<T> myFirstParser;
-    [NotNull] private readonly Parser myNextParser;
+    [NotNull] private readonly Parser<T> myHeadParser;
+    [NotNull] private readonly Parser myTailParser;
 
-    public AfterParserTest([NotNull] Parser<T> firstParser, [NotNull] Parser nextParser)
+    public AfterParserTest([NotNull] Parser<T> headParser, [NotNull] Parser tailParser)
     {
-      myFirstParser = firstParser;
-      myNextParser = nextParser;
+      myHeadParser = headParser;
+      myTailParser = tailParser;
 
       AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var firstResult = myFirstParser.TryParseValue(input, offset);
-      if (firstResult.IsSuccessful)
+      var headResult = myHeadParser.TryParseValue(input, offset);
+      if (headResult.IsSuccessful)
       {
-        var nextResult = myNextParser.TryParseVoid(input, firstResult.Offset);
-        if (nextResult.IsSuccessful)
+        var tailResult = myTailParser.TryParseVoid(input, headResult.Offset);
+        if (tailResult.IsSuccessful)
         {
-          return new ParseResult(firstResult.Value, nextResult.Offset);
+          return new ParseResult(headResult.Value, tailResult.Offset);
         }
 
-        return new ParseResult(nextResult.FailPoint, nextResult.Offset);
+        return new ParseResult(tailResult.FailPoint, tailResult.Offset);
       }
 
-      return firstResult;
+      return headResult;
     }
 
-    public override Parser<T> IgnoreCase()
+    protected override Parser<T> CreateIgnoreCaseParser()
     {
-      throw new NotImplementedException();
-      //return new AfterParserTest<T>(myFirstParser.IgnoreCase(), myNextParser.IgnoreCase());
+      var ignoreCaseHeadParser = myHeadParser.IgnoreCase();
+      var ignoreCaseTailParser = myTailParser.IgnoreCase();
+
+      if (ReferenceEquals(myHeadParser, ignoreCaseHeadParser) &&
+          ReferenceEquals(myTailParser, ignoreCaseTailParser))
+      {
+        return this;
+      }
+
+      return new AfterParserTest<T>(ignoreCaseHeadParser, ignoreCaseTailParser);
     }
   }
 }

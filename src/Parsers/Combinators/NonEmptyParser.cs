@@ -37,5 +37,13 @@ namespace Parse.Sharp.Parsers.Combinators
 
       return "non-empty " + failPoint.GetExpectedMessage();
     }
+
+    protected override Parser<T> CreateIgnoreCaseParser()
+    {
+      var ignoreCaseParser = myUnderlyingParser.IgnoreCase();
+      if (ReferenceEquals(myUnderlyingParser, ignoreCaseParser)) return this;
+
+      return new NonEmptyParser<T>(ignoreCaseParser, myDescription);
+    }
   }
 }

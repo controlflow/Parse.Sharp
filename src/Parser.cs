@@ -72,23 +72,20 @@ namespace Parse.Sharp
       public override string ToString()
       {
         return IsSuccessful
-          ? string.Format("Success@{0}: {1}", Offset, Value)
-          : string.Format("Failure@{0}: {1}", Offset, FailPoint.GetExpectedMessage());
+          ? string.Format("Success[offset={0}]: {1}", Offset, Value)
+          : string.Format("Failure[offset={0}]: {1}", Offset, FailPoint.GetExpectedMessage());
       }
     }
 
-    // todo: non-virtual interface
-    // todo: to property?
-    [Pure, NotNull]
-    public virtual Parser<T> IgnoreCase()
-    {
-      return this;
-    }
+    [Pure, NotNull, DebuggerStepThrough]
+    public new Parser<T> IgnoreCase() { return CreateIgnoreCaseParser(); }
 
-    //public override Parser IgnoreCase()
-    //{
-    //  return 
-    //}
+    [Pure, DebuggerStepThrough]
+    protected sealed override Parser IgnoreCaseVoid() { return CreateIgnoreCaseParser(); }
+
+    // todo: to abstract!
+    [Pure, NotNull, DebuggerStepThrough]
+    protected virtual Parser<T> CreateIgnoreCaseParser() { return this; }
 
     // utils:
 
@@ -117,40 +114,47 @@ namespace Parse.Sharp
     }
 
 
-    [NotNull, Pure] public Parser<string> ManyToString([CanBeNull] string description = null)
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<string> ManyToString([CanBeNull] string description = null)
     {
       return new ManyToStringParser(this, description);
     }
 
-    [NotNull, Pure] public Parser<T> SurroundWith([NotNull] Parser headAndTailParser)
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> SurroundWith([NotNull] Parser headAndTailParser)
     {
       return new SurroundParser<T>(headAndTailParser, this, headAndTailParser);
     }
 
-    [NotNull, Pure] public Parser<T> SurroundWith([NotNull] Parser headParser, [NotNull] Parser tailParser)
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> SurroundWith([NotNull] Parser headParser, [NotNull] Parser tailParser)
     {
       return new SurroundParser<T>(headParser, this, tailParser);
     }
 
-    [NotNull, Pure] public Parser<T> WithTail([NotNull] Parser tailParser)
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> WithTail([NotNull] Parser tailParser)
     {
       return new AfterParserTest<T>(this, tailParser);
     }
 
-    [NotNull, Pure] public Parser<T> Token()
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> Token()
     {
       // todo: whitespace.many()
       var whitespace = Sharp.Parse.WhitespaceChar;
       return new SurroundParser<T>(whitespace, this, whitespace);
     }
 
-    [NotNull, Pure] public Parser<T> WhitespaceAfter()
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> WhitespaceAfter()
     {
       // todo: whitespace.many()
       return new AfterParserTest<T>(this, Sharp.Parse.WhitespaceChar);
     }
 
-    [NotNull, Pure] public Parser<T> WhitespaceBefore()
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> WhitespaceBefore()
     {
       // todo: whitespace.many()
       return new AfterParserTest<T>(this, Sharp.Parse.WhitespaceChar);
@@ -195,17 +199,20 @@ namespace Parse.Sharp
 
     // combinators:
 
-    [NotNull, Pure] public Parser<T> Or(Parser<T> other)
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> Or(Parser<T> other)
     {
       return new ChoiceParser<T>(this, other);
     }
 
-    [NotNull, Pure] public Parser<object> Not([CanBeNull] string description = null)
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<object> Not([CanBeNull] string description = null)
     {
       return new NotParser<T>(this, description);
     }
 
-    [NotNull, Pure] public Parser<T> NonEmpty([CanBeNull] string description = null)
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser<T> NonEmpty([CanBeNull] string description = null)
     {
       return new NonEmptyParser<T>(this, description);
     }
@@ -313,11 +320,17 @@ namespace Parse.Sharp
       public override string ToString()
       {
         return IsSuccessful
-          ? string.Format("Success@{0}", Offset)
-          : string.Format("Failure@{0}: {1}", Offset, FailPoint.GetExpectedMessage());
+          ? string.Format("Success[offset={0}]", Offset)
+          : string.Format("Failure[offset={0}]: {1}", Offset, FailPoint.GetExpectedMessage());
       }
     }
 
+
+    [NotNull, Pure, DebuggerStepThrough]
+    public Parser IgnoreCase() { return IgnoreCaseVoid(); }
+
+    [Pure, NotNull]
+    protected abstract Parser IgnoreCaseVoid();
 
 
     [NotNull, Pure, DebuggerStepThrough]

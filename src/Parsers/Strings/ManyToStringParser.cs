@@ -30,6 +30,11 @@ namespace Parse.Sharp.Parsers.Strings
       return new ParseResult(value, nextOffset: innerOffset);
     }
 
+    protected override Parser<string> CreateIgnoreCaseParser()
+    {
+      return new ManyToStringParser(myContentsParser.IgnoreCase(), myDescription);
+    }
+
     public string GetExpectedMessage()
     {
       if (myDescription != null) return myDescription;

@@ -4,32 +4,46 @@ namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class BeforeParserTest<T> : Parser<T>
   {
-    [NotNull] private readonly Parser myFirstParser;
-    [NotNull] private readonly Parser<T> myNextParser;
+    [NotNull] private readonly Parser myHeadParser;
+    [NotNull] private readonly Parser<T> myTailParser;
 
-    public BeforeParserTest([NotNull] Parser firstParser, [NotNull] Parser<T> nextParser)
+    public BeforeParserTest([NotNull] Parser headParser, [NotNull] Parser<T> tailParser)
     {
-      myFirstParser = firstParser;
-      myNextParser = nextParser;
+      myHeadParser = headParser;
+      myTailParser = tailParser;
 
       AssertParserAllocation();
     }
 
     protected internal override ParseResult TryParseValue(string input, int offset)
     {
-      var firstResult = myFirstParser.TryParseVoid(input, offset);
-      if (firstResult.IsSuccessful)
+      var headResult = myHeadParser.TryParseVoid(input, offset);
+      if (headResult.IsSuccessful)
       {
-        var nextResult = myNextParser.TryParseValue(input, firstResult.Offset);
-        if (nextResult.IsSuccessful)
+        var tailResult = myTailParser.TryParseValue(input, headResult.Offset);
+        if (tailResult.IsSuccessful)
         {
-          return nextResult;
+          return tailResult;
         }
 
-        return new ParseResult(nextResult.FailPoint, nextResult.Offset);
+        return new ParseResult(tailResult.FailPoint, tailResult.Offset);
       }
 
-      return new ParseResult(firstResult.FailPoint, firstResult.Offset);
+      return new ParseResult(headResult.FailPoint, headResult.Offset);
+    }
+
+    protected override Parser<T> CreateIgnoreCaseParser()
+    {
+      var ignoreCaseHeadParser = myHeadParser.IgnoreCase();
+      var ignoreCaseTailParser = myTailParser.IgnoreCase();
+
+      if (ReferenceEquals(myHeadParser, ignoreCaseHeadParser) &&
+          ReferenceEquals(myTailParser, ignoreCaseTailParser))
+      {
+        return this;
+      }
+
+      return new BeforeParserTest<T>(ignoreCaseHeadParser, ignoreCaseTailParser);
     }
   }
 }

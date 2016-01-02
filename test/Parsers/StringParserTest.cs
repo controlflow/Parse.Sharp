@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
 
 namespace Parse.Sharp.Tests.Parsers
 {
@@ -8,16 +9,24 @@ namespace Parse.Sharp.Tests.Parsers
     {
       AssertParse(Parse.String("class"), "class", "class");
       AssertParse(Parse.IgnoreCaseString("class"), "ClaSS", "ClaSS");
+      AssertParse(Parse.String("class").IgnoreCase(), "ClaSS", "ClaSS");
+      AssertParse(Parse.String("class").IgnoreCase(), "claSS", "claSS");
+    }
 
-      var lq = Parse.Char('{');
-      var rq = Parse.Char('}');
+    [Test, SuppressMessage("ReSharper", "ConvertToConstant.Local")]
+    public void LessAllocations()
+    {
+      var text = "class";
+      var parser = Parse.String(text).WhitespaceAfter();
 
-      AssertParse(
-        parser: from kw in Parse.String("class")
-                from lb in lq
-                from rb in rq
-                select true,
-        input: "class{}");
+      var parsedText1 = parser.Parse("class ");
+      Assert.IsTrue(ReferenceEquals(text, parsedText1));
+
+      var parsedText2 = parser.IgnoreCase().Parse("class ");
+      Assert.IsTrue(ReferenceEquals(text, parsedText2));
+
+      var parsedText3 = parser.IgnoreCase().Parse("cLass ");
+      Assert.IsFalse(ReferenceEquals(text, parsedText3));
     }
 
     [Test] public void ManyToString()

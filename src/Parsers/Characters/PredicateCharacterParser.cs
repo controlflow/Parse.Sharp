@@ -32,7 +32,7 @@ namespace Parse.Sharp.Parsers.Characters
       return new ParseResult(failPoint: this, atOffset: offset);
     }
 
-    public override Parser<char> IgnoreCase()
+    protected override Parser<char> CreateIgnoreCaseParser()
     {
       if (myPredicate.Target is IgnoreCasePredicate) return this;
 
