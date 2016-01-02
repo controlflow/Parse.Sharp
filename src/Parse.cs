@@ -64,37 +64,37 @@ namespace Parse.Sharp
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> Chars([NotNull] string characters)
     {
-      return new CharacterSetParser(characters.ToCharArray(), description: null, isNegative: false);
+      return new CharacterSetParser(characters.ToCharArray(), description: null, isExcept: false);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> CharsExcept([NotNull] string characters)
     {
-      return new CharacterSetParser(characters.ToCharArray(), description: null, isNegative: true);
+      return new CharacterSetParser(characters.ToCharArray(), description: null, isExcept: true);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> Chars([NotNull] params char[] characters)
     {
-      return new CharacterSetParser(characters, description: null, isNegative: false);
+      return new CharacterSetParser(characters, description: null, isExcept: false);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> CharsExcept([NotNull] params char[] characters)
     {
-      return new CharacterSetParser(characters, description: null, isNegative: true);
+      return new CharacterSetParser(characters, description: null, isExcept: true);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> Chars([NotNull] string description, [NotNull] params char[] characters)
     {
-      return new CharacterSetParser(characters, description, isNegative: false);
+      return new CharacterSetParser(characters, description, isExcept: false);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> CharsExcept([NotNull] string description, [NotNull] params char[] characters)
     {
-      return new CharacterSetParser(characters, description, isNegative: true);
+      return new CharacterSetParser(characters, description, isExcept: true);
     }
 
     // todo: .CharsIgnoreCase?

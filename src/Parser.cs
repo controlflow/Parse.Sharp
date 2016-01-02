@@ -43,6 +43,8 @@ namespace Parse.Sharp
       return new ParseAttempt(parseResult.FailPoint, parseResult.Offset);
     }
 
+    
+
     protected internal struct ParseResult
     {
       private readonly T myValue;
@@ -70,7 +72,11 @@ namespace Parse.Sharp
       public IFailPoint FailPoint { get { return myFailPoint; } }
     }
 
-    
+    [Pure, NotNull]
+    public virtual Parser<T> IgnoreCase()
+    {
+      return this;
+    }
 
     // utils:
 

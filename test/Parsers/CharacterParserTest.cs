@@ -17,6 +17,17 @@ namespace Parse.Sharp.Tests.Parsers
       AssertFailure(Parse.Char('+'), input: "///", expectedMessage: "'+' expected, got '///'");
     }
 
+    [Test] public void IgnoreCase()
+    {
+      Assert.IsTrue(ReferenceEquals(Parse.Dot.IgnoreCase(), Parse.Dot));
+
+      var separator = Parse.Char('-');
+      Assert.IsTrue(ReferenceEquals(separator.IgnoreCase(), separator));
+
+      AssertParse(Parse.Char('a').IgnoreCase(), "A", 'A');
+      AssertParse(Parse.Char('a').IgnoreCase(), "a", 'a');
+    }
+
     [Test] public void AnyCharacter()
     {
       AssertParse(Parse.AnyChar, "x", 'x');

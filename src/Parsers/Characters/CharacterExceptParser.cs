@@ -25,6 +25,19 @@ namespace Parse.Sharp.Parsers.Characters
       return new ParseResult(failPoint: this, atOffset: offset);
     }
 
+    public override Parser<char> IgnoreCase()
+    {
+      var lower = char.ToLowerInvariant(myCharacter);
+      if (lower != myCharacter)
+        return new CharacterSetParser(new[] {lower, myCharacter}, description: null, isExcept: true);
+
+      var upper = char.ToUpperInvariant(myCharacter);
+      if (upper != myCharacter)
+        return new CharacterSetParser(new[] {myCharacter, upper}, description: null, isExcept: true);
+
+      return this;
+    }
+
     public string GetExpectedMessage()
     {
       // ReSharper disable once RedundantToStringCallForValueType

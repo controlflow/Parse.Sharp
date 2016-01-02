@@ -8,16 +8,16 @@ namespace Parse.Sharp.Parsers.Characters
   {
     [NotNull] private readonly char[] myCharacters;
     [CanBeNull] private string myDescription;
-    private readonly bool myIsNegative;
+    private readonly bool myIsExcept;
 
-    public CharacterSetParser([NotNull] char[] characters, [CanBeNull] string description, bool isNegative)
+    public CharacterSetParser([NotNull] char[] characters, [CanBeNull] string description, bool isExcept)
     {
       if (characters.Length == 0)
         throw new ArgumentException("Non-empty character set expected", "characters");
 
       myCharacters = characters;
       myDescription = description;
-      myIsNegative = isNegative;
+      myIsExcept = isExcept;
 
       AssertParserAllocation();
     }
@@ -31,13 +31,13 @@ namespace Parse.Sharp.Parsers.Characters
         {
           if (ch == expectedCharacter)
           {
-            return myIsNegative
+            return myIsExcept
               ? new ParseResult(failPoint: this, atOffset: offset)
               : new ParseResult(value: ch, nextOffset: offset + 1);
           }
         }
 
-        if (myIsNegative) return new ParseResult(value: ch, nextOffset: offset + 1);
+        if (myIsExcept) return new ParseResult(value: ch, nextOffset: offset + 1);
       }
 
       return new ParseResult(failPoint: this, atOffset: offset);
@@ -54,7 +54,7 @@ namespace Parse.Sharp.Parsers.Characters
           builder.Append('\'').Append(character).Append('\'');
         }
 
-        if (myIsNegative) builder.Insert(0, "not ");
+        if (myIsExcept) builder.Insert(0, "not ");
 
         myDescription = builder.ToString();
       }
