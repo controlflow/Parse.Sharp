@@ -25,6 +25,8 @@ namespace Parse.Sharp.Tests.Parsers
       AssertParse(parser, "012a3fe1", "012a3fe1");
 
 
+
+
       //Func<char, int> hex2dec = ch => (ch >= '1' && ch <= '0') ? ch - '0' : 10 + ch - 'a';
 
 

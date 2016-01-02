@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -43,34 +44,30 @@ namespace Parse.Sharp.Parsers.Characters
       return new ParseResult(failPoint: this, atOffset: offset);
     }
 
-    // todo: test!
     protected override Parser<char> CreateIgnoreCaseParser()
     {
-      var count = 0;
+      HashSet<char> ignoreCaseSet = null;
 
       foreach (var character in myCharacters)
       {
-        var alternative = InvertCharCase(character);
-        if (alternative != character) count ++;
-      }
-
-
-
-      if (count == 0) return this;
-
-      var index = 0;
-      var newCharacters = new char[myCharacters.Length + count];
-
-      foreach (var character in myCharacters)
-      {
-        newCharacters[index++] = character;
-
         var alternative = InvertCharCase(character);
         if (alternative != character)
-          newCharacters[index++] = alternative;
+        {
+          ignoreCaseSet = ignoreCaseSet ?? new HashSet<char>(myCharacters);
+          ignoreCaseSet.Add(alternative);
+        }
       }
 
+      if (ignoreCaseSet == null) return this;
+
+      var ignoreCaseCharsCount = ignoreCaseSet.Count;
+      if (ignoreCaseCharsCount == myCharacters.Length) return this;
+
+      var newCharacters = new char[ignoreCaseCharsCount];
+      ignoreCaseSet.CopyTo(newCharacters);
+
       var forcedDescription = GetExpectedMessage();
+
       return new CharacterSetParser(newCharacters, forcedDescription, myIsExcept);
     }
 

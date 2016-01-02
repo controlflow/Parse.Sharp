@@ -27,7 +27,7 @@ namespace Parse.Sharp.Tests.Parsers
          // + ws
          // todo: .Many()/.CommaSeparated()
          .Select(x => new[] { x }.AsEnumerable())
-         .Select(xs => xs.ToDictionary(x => x.Key, x => x.Value))
+         //.Select(xs => xs.ToDictionary(x => x.Key, x => x.Value))
          // .Many()
       from rBrace in Parse.Char('}')
       select new ObjLiteral(properties);
@@ -48,11 +48,11 @@ namespace Parse.Sharp.Tests.Parsers
       // todo: numbers
       ;
 
-    class ObjLiteral : Dictionary<string, object>
+    class ObjLiteral : List<KeyValuePair<string, object>>
     {
       public ObjLiteral() { }
-      public ObjLiteral([NotNull] IDictionary<string, object> dictionary)
-        : base(dictionary) { }
+      public ObjLiteral([NotNull] IEnumerable<KeyValuePair<string, object>> collection)
+        : base(collection) { }
     }
 
 

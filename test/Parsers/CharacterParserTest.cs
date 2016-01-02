@@ -124,7 +124,7 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void CharactersSetIgnoreCase()
     {
-      var parser = Parse.Chars("01234567abcdef").ManyToString().IgnoreCase();
+      var parser = Parse.Chars("0123456789abcdef").ManyToString().IgnoreCase();
       Assert.IsTrue(ReferenceEquals(parser.IgnoreCase(), parser));
 
       AssertParse(parser, "aAbBcCdDeEfF0123456789");
