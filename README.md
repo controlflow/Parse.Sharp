@@ -33,6 +33,4 @@ Parser expression | Purpose
 `parser.Not()` | Succeeds when `parser` fails to parse input, do not advances parsing offset
 `parser.SurroundWith(p1, p2)` | Applies `p1`, `parser`, `p2` parsers sequentially and returns the result of `parser`
 `parser.Return(t)` | Always succeeds and produces value `t` as output
-`from value1 in parser1
- from value2 in parser2
- select f(value1, value2)` | Runs two parsers sequentially
+`from x in p1 from y in p2 select f(x, y)` | Runs `p1` and `p2` parsers sequentially transforming the result

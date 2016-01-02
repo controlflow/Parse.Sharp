@@ -31,7 +31,7 @@ namespace Parse.Sharp
     [Pure] protected internal abstract ParseResult TryParseValue([NotNull] string input, int offset);
 
     // todo: check out inheritors for more efficient implementations
-    protected internal sealed override ParseAttempt TryParseVoid(string input, int offset)
+    protected internal override ParseAttempt TryParseVoid(string input, int offset)
     {
       var parseResult = TryParseValue(input, offset);
       if (parseResult.IsSuccessful)
@@ -126,11 +126,7 @@ namespace Parse.Sharp
     }
     
 
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<string> ManyToString([CanBeNull] string description = null)
-    {
-      return new ManyToStringParser(this, description);
-    }
+    
 
     [NotNull, Pure, DebuggerStepThrough]
     public Parser<T> SurroundWith([NotNull] Parser headAndTailParser)
@@ -195,19 +191,7 @@ namespace Parse.Sharp
       return new SequentialParser<T, TNext, TResult>(this, nextParser, selector);
     }
 
-    [Pure, NotNull, DebuggerStepThrough]
-    public Parser<TAccumulate> Aggregate<TAccumulate>(
-      TAccumulate seed, [NotNull] Func<TAccumulate, T, TAccumulate> fold)
-    {
-      return new AggregateParser<T, TAccumulate>(this, () => seed, fold);
-    }
-
-    [Pure, NotNull, DebuggerStepThrough]
-    public Parser<TAccumulate> Aggregate<TAccumulate>(
-      [NotNull] Func<TAccumulate> seedFactory, [NotNull] Func<TAccumulate, T, TAccumulate> fold)
-    {
-      return new AggregateParser<T, TAccumulate>(this, seedFactory, fold);
-    }
+    
 
     // combinators:
 
@@ -231,53 +215,9 @@ namespace Parse.Sharp
 
     // qualifiers:
 
+    
 
-
-    public Parser<T[]> ZeroOrMany()
-    {
-      return new QuantifiedParser(this, min: 0, max: uint.MaxValue);
-    }
-
-    private class QuantifiedParser : Parser<T[]>
-    {
-      // todo: do not allocate for empty parsers
-
-      private readonly Parser<T> myUnderlyingParser;
-      private readonly uint myMin, myMax;
-
-      public QuantifiedParser(Parser<T> parser, uint min, uint max)
-      {
-        myUnderlyingParser = parser;
-        myMin = min;
-        myMax = max;
-
-        AssertParserAllocation();
-      }
-
-      protected internal override ParseResult TryParseValue(string input, int offset)
-      {
-        if (myMin > 0 && myMin == myMax)
-        {
-          // fixed size array
-        }
-
-        for (uint count = 0; count < myMax; count++)
-        {
-          // todo: compute if conditional!
-
-          var result = myUnderlyingParser.TryParseValue(input, offset);
-          if (result.IsSuccessful)
-          {
-
-          }
-
-        }
-
-
-        // todo:
-        return new ParseResult();
-      }
-    }
+    
 
     
 

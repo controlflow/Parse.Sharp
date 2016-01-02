@@ -34,6 +34,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Parse.Cast.cs" />
+    <Compile Include="Parse.Aggregate.cs" />
+    <Compile Include="Parse.Quantifiers.cs" />
     <Compile Include="Parse.Strings.cs" />
     <Compile Include="Parse.Trivial.cs" />
     <Compile Include="Parse.Optional.cs" />
@@ -46,6 +48,7 @@
     <Compile Include="Parsers\Combinators\FailureParser.cs" />
     <Compile Include="Parsers\Combinators\NonEmptyParser.cs" />
     <Compile Include="Parsers\Combinators\NullableOptionalParser.cs" />
+    <Compile Include="Parsers\Combinators\QualifiedParser.cs" />
     <Compile Include="Parsers\Combinators\ReturnParser.cs" />
     <Compile Include="Parsers\Combinators\OptionalParser.cs" />
     <Compile Include="Parsers\Combinators\SurroundParser.cs" />

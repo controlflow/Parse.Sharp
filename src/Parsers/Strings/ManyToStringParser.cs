@@ -2,15 +2,13 @@
 
 namespace Parse.Sharp.Parsers.Strings
 {
-  internal sealed class ManyToStringParser : Parser<string>, Parser.IFailPoint
+  internal sealed class ManyToStringParser : Parser<string>
   {
     [NotNull] private readonly Parser myContentsParser;
-    [CanBeNull] private readonly string myDescription;
 
-    public ManyToStringParser([NotNull] Parser contentsParser, [CanBeNull] string description)
+    public ManyToStringParser([NotNull] Parser contentsParser)
     {
       myContentsParser = contentsParser;
-      myDescription = description;
 
       AssertParserAllocation();
     }
@@ -37,17 +35,7 @@ namespace Parse.Sharp.Parsers.Strings
       var ignoreCaseContentParser = myContentsParser.IgnoreCase();
       if (ReferenceEquals(myContentsParser, ignoreCaseContentParser)) return this;
 
-      return new ManyToStringParser(ignoreCaseContentParser, myDescription);
-    }
-
-    public string GetExpectedMessage()
-    {
-      if (myDescription != null) return myDescription;
-
-      var failPoint = myContentsParser as IFailPoint;
-      if (failPoint == null) return "string";
-
-      return "string of " + failPoint.GetExpectedMessage();
+      return new ManyToStringParser(ignoreCaseContentParser);
     }
   }
 }

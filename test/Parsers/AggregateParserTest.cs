@@ -18,25 +18,15 @@ namespace Parse.Sharp.Tests.Parsers
     {
       var hexCharacters = Parse.AnyCharOf("0123456789abcdef");
 
-      var parser = hexCharacters
+      var parser1 = hexCharacters
         .Aggregate(() => new StringBuilder(), (acc, value) => acc.Append(value))
-        .Select(x => x.ToString());
+        .Select(sb => sb.ToString());
 
-      AssertParse(parser, "012a3fe1", "012a3fe1");
+      AssertParse(parser1, "012a3fe1", "012a3fe1");
 
-
-
-
-      //Func<char, int> hex2dec = ch => (ch >= '1' && ch <= '0') ? ch - '0' : 10 + ch - 'a';
-
-
-
-      //Func<StringBuilder>
-
-      //var t = '0' < '9';
-
-      
-      
+      var parser2 = hexCharacters.AggregateToString().IgnoreCase();
+      AssertParse(parser2, "012a3fe1", "012a3fe1");
+      AssertParse(parser2, "012A3fBE1", "012A3fBE1");
     }
   }
 }
