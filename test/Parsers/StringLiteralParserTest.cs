@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace Parse.Sharp.Tests.Parsers
@@ -12,10 +14,60 @@ namespace Parse.Sharp.Tests.Parsers
       AssertParse(stringLiteral, "\"abc\"", "abc");
     }
 
+    [Test] public void UnicodeEscaping()
+    {
+      var hexDigit = Parse.AnyCharOf("0123456789abcdef").IgnoreCase();
+      var hexDigitOpt = hexDigit.OptionalToNullable();
+
+      var hexNumber =
+        from hex1 in hexDigit
+        from hex2 in hexDigitOpt
+        from hex3 in hexDigitOpt
+        from hex4 in hexDigitOpt
+        let text = hex1.ToString() + hex2 + hex3 + hex4
+        let value = int.Parse(text, NumberStyles.AllowHexSpecifier)
+        select Convert.ToChar(value);
+
+      AssertParse(hexNumber, "0", '\x0');
+      AssertParse(hexNumber, "12", '\x12');
+      AssertParse(hexNumber, "012", '\x12');
+      AssertParse(hexNumber, "0012", '\x12');
+      AssertParse(hexNumber, "AC12", '\xAC12');
+
+      AssertFailure(hexNumber, "00123", expectedMessage: "end of string expected, got '3'", failureOffset: 4);
+    }
+
+    [Test] public void UnicodeEscaping2()
+    {
+      var hexDigit = Parse.AnyCharOf("0123456789abcdef").IgnoreCase();
+      var hexDigitOpt = hexDigit.OptionalToNullable();
+
+      // todo: the same via .Many(min: 1, max: 4)
+
+      //var hexNumber =
+      //  from hex1 in hexDigit
+      //  from hex2 in hexDigitOpt
+      //  from hex3 in hexDigitOpt
+      //  from hex4 in hexDigitOpt
+      //  let text = hex1.ToString() + hex2 + hex3 + hex4
+      //  let value = int.Parse(text, NumberStyles.AllowHexSpecifier)
+      //  select Convert.ToChar(value);
+
+      //AssertParse(hexNumber, "0", '\x0');
+      //AssertParse(hexNumber, "12", '\x12');
+      //AssertParse(hexNumber, "012", '\x12');
+      //AssertParse(hexNumber, "0012", '\x12');
+      //AssertParse(hexNumber, "AC12", '\xAC12');
+      //
+      //AssertFailure(hexNumber, "00123", expectedMessage: "end of string expected, got '3'", failureOffset: 4);
+    }
+
     [Test] public void WithEscaping()
     {
       var ordinaryCharacter = Parse.AnyCharExcept('\\', '\x27', '\x5C', '\r', '\n');
-      var hexDigit = Parse.AnyCharOf("0123456789abcdef").IgnoreCase();
+
+      // unicode symbol via hex code
+      
 
 
       //Parse.Char('x')
