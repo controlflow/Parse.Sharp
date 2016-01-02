@@ -46,7 +46,7 @@
     <Compile Include="Parsers\ChoiceParserTest.cs" />
     <Compile Include="Parsers\IntParsingTest.cs" />
     <Compile Include="Parsers\JsonParserTest.cs" />
-    <Compile Include="Parsers\NotParserTest.cs" />
+    <Compile Include="Parsers\TrivialParsersTest.cs" />
     <Compile Include="Parsers\OptionalParserTest.cs" />
     <Compile Include="Parsers\SequentialParserTest.cs" />
     <Compile Include="Parsers\StringLiteralParserTest.cs" />

@@ -1,4 +1,3 @@
-using System.CodeDom;
 using NUnit.Framework;
 
 namespace Parse.Sharp.Tests.Parsers
@@ -15,12 +14,10 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void WithEscaping()
     {
-      // // ordinary character
-        //Parse.CharExcept('\\'),
-
       var ordinaryCharacter = Parse.CharsExcept('\\', '\x27', '\x5C', '\r', '\n');
-
       var hexDigit = Parse.Chars("0123456789abcdefABCDEF");
+
+      //Parse.Return()
 
       //hexDigit.Aggregate()
 
