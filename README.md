@@ -4,7 +4,7 @@ Yet another C# parser combinator library
 ### Character parsers
 
 Parser expression | Valid input(s)
--|-
+------------------|---------------
 `Parse.AnyChar` | `a`, `_`, ...
 `Parse.Dot` | `.`
 `Parse.Char('a')` | `a`
