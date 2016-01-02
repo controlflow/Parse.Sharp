@@ -1,4 +1,6 @@
-﻿namespace Parse.Sharp.Parsers.Combinators
+﻿using JetBrains.Annotations;
+
+namespace Parse.Sharp.Parsers.Combinators
 {
   internal sealed class ReturnParser<T> : Parser<T>
   {

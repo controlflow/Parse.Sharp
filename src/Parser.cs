@@ -115,6 +115,18 @@ namespace Parse.Sharp
 
 
     [NotNull, Pure, DebuggerStepThrough]
+    public Parser<TTarget> Cast<TTarget>()
+    {
+      return new SelectParser<T, TTarget>(this, CastHelper<TTarget>.Id);
+    }
+
+    private static class CastHelper<TTarget>
+    {
+      [NotNull] public static readonly Func<T, TTarget> Id = value => (TTarget) (object) value;
+    }
+    
+
+    [NotNull, Pure, DebuggerStepThrough]
     public Parser<string> ManyToString([CanBeNull] string description = null)
     {
       return new ManyToStringParser(this, description);
@@ -267,17 +279,7 @@ namespace Parse.Sharp
       }
     }
 
-    [NotNull, Pure]
-    public Parser<T> OptionalOrDefault()
-    {
-      return new OptionalParser<T>(this, default(T));
-    }
-
-    [NotNull, Pure]
-    public Parser<T> OptionalOrDefault(T defaultValue)
-    {
-      return new OptionalParser<T>(this, defaultValue);
-    }
+    
 
     //private class ToNullable<TResult> : Parser<TResult?>
     //  where TResult : struct

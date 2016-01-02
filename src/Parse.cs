@@ -2,15 +2,13 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 using Parse.Sharp.Parsers;
-using Parse.Sharp.Parsers.Combinators;
-using Parse.Sharp.Parsers.Strings;
 
 namespace Parse.Sharp
 {
   // todo: Parse.SeparatedList(item, separator)
 
   [PublicAPI]
-  public partial class Parse
+  public static partial class Parse
   {
     // digits and numbers:
 
@@ -32,33 +30,13 @@ namespace Parse.Sharp
 
     // strings:
 
-    [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<string> String([NotNull] string text)
-    {
-      return new StringParser(text);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<string> IgnoreCaseString([NotNull] string text)
-    {
-      return new IgnoreCaseStringParser(text);
-    }
+    
 
     
 
     // combinators:
 
-    [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> Return<T>(T value)
-    {
-      return new ReturnParser<T>(value);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> Fail<T>([NotNull] string description)
-    {
-      return new FailureParser<T>(description);
-    }
+    
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<T> Choice<T>([NotNull] Parser<T> left, [NotNull] Parser<T> right)

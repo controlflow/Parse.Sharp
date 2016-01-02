@@ -16,7 +16,7 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void AggregateToString()
     {
-      var hexCharacters = Parse.Chars("0123456789abcdef");
+      var hexCharacters = Parse.AnyCharOf("0123456789abcdef");
 
       var parser = hexCharacters
         .Aggregate(() => new StringBuilder(), (acc, value) => acc.Append(value))

@@ -22,7 +22,7 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void SurroundWith2()
     {
-      var stringContents = Parse.CharsExcept('"', '\'').ManyToString();
+      var stringContents = Parse.AnyCharExcept('"', '\'').ManyToString();
       var stringLiteral = Parse.Choice(
         stringContents.SurroundWith(Parse.Char('"'), Parse.Char('\'')),
         stringContents.SurroundWith(Parse.Char('\''), Parse.Char('"')));

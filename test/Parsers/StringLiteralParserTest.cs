@@ -14,9 +14,19 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void WithEscaping()
     {
-      var ordinaryCharacter = Parse.CharsExcept('\\', '\x27', '\x5C', '\r', '\n');
-      var hexDigit = Parse.Chars("0123456789abcdefABCDEF");
+      var ordinaryCharacter = Parse.AnyCharExcept('\\', '\x27', '\x5C', '\r', '\n');
+      var hexDigit = Parse.AnyCharOf("0123456789abcdef").IgnoreCase();
 
+
+      //Parse.Char('x')
+
+      //hexDigit.Aggregate()
+
+
+
+
+      // todo: unicode symbol parser
+      // todo: 
       //Parse.Return()
 
       //hexDigit.Aggregate()

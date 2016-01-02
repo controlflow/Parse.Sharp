@@ -42,9 +42,9 @@ namespace Parse.Sharp.Tests.Parsers
       select new object[0];
 
     private static readonly Parser<object> PropertyValue =
-      StringLiteral.Select(str => (object) str)
-      .Or(ObjectLiteral.Select(obj => (object) obj))
-      .Or(ArrayLiteral.Select(arr => (object) arr))
+      StringLiteral.Cast<object>()
+      .Or(ObjectLiteral.Cast<object>())
+      .Or(ArrayLiteral.Cast<object>())
       // todo: numbers
       ;
 

@@ -91,7 +91,7 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void CharactersSet1()
     {
-      var parser = Parse.Chars('1', '2', '3');
+      var parser = Parse.AnyCharOf('1', '2', '3');
 
       AssertParse(parser, "1", '1');
       AssertParse(parser, "2", '2');
@@ -101,7 +101,7 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void CharactersSet2()
     {
-      var parser = Parse.CharsExcept('1', '2', '3');
+      var parser = Parse.AnyCharExcept('1', '2', '3');
 
       AssertParse(parser, "a", 'a');
       AssertParse(parser, "b", 'b');
@@ -111,12 +111,12 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void CharactersSet3()
     {
-      AssertParse(Parse.Chars("abc"), "a", 'a');
-      AssertParse(Parse.Chars("abc"), "c", 'c');
-      AssertParse(Parse.CharsExcept("abc"), "1", '1');
-      AssertParse(Parse.CharsExcept("abc"), "2", '2');
+      AssertParse(Parse.AnyCharOf("abc"), "a", 'a');
+      AssertParse(Parse.AnyCharOf("abc"), "c", 'c');
+      AssertParse(Parse.AnyCharExcept("abc"), "1", '1');
+      AssertParse(Parse.AnyCharExcept("abc"), "2", '2');
 
-      var parser = Parse.Chars("digit", '1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
+      var parser = Parse.AnyCharOf("digit", '1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
       AssertParse(parser, "1", '1');
 
       AssertFailure(parser, input: "a", expectedMessage: "digit expected, got 'a'");
@@ -124,7 +124,7 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void CharactersSetIgnoreCase()
     {
-      var parser = Parse.Chars("0123456789abcdef").ManyToString().IgnoreCase();
+      var parser = Parse.AnyCharOf("0123456789abcdef").ManyToString().IgnoreCase();
       Assert.IsTrue(ReferenceEquals(parser.IgnoreCase(), parser));
 
       AssertParse(parser, "aAbBcCdDeEfF0123456789");

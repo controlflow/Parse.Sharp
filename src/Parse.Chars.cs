@@ -45,38 +45,40 @@ namespace Parse.Sharp
       return new PredicateCharacterParser(predicate, description, isExcept: true);
     }
 
+    // character sets:
+
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<char> Chars([NotNull] string characters)
+    public static Parser<char> AnyCharOf([NotNull] string characters)
     {
       return new CharacterSetParser(characters.ToCharArray(), description: null, isExcept: false);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<char> CharsExcept([NotNull] string characters)
+    public static Parser<char> AnyCharExcept([NotNull] string characters)
     {
       return new CharacterSetParser(characters.ToCharArray(), description: null, isExcept: true);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<char> Chars([NotNull] params char[] characters)
+    public static Parser<char> AnyCharOf([NotNull] params char[] characters)
     {
       return new CharacterSetParser(characters, description: null, isExcept: false);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<char> CharsExcept([NotNull] params char[] characters)
+    public static Parser<char> AnyCharExcept([NotNull] params char[] characters)
     {
       return new CharacterSetParser(characters, description: null, isExcept: true);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<char> Chars([NotNull] string description, [NotNull] params char[] characters)
+    public static Parser<char> AnyCharOf([NotNull] string description, [NotNull] params char[] characters)
     {
       return new CharacterSetParser(characters, description, isExcept: false);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<char> CharsExcept([NotNull] string description, [NotNull] params char[] characters)
+    public static Parser<char> AnyCharExcept([NotNull] string description, [NotNull] params char[] characters)
     {
       return new CharacterSetParser(characters, description, isExcept: true);
     }

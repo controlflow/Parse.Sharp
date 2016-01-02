@@ -30,5 +30,12 @@ namespace Parse.Sharp.Tests.Parsers
       AssertFailure(notDigit, input: "1", expectedMessage: "not digit expected, got '1'");
       AssertFailure(Parse.Digit.Not("letter"), input: "1", expectedMessage: "letter expected, got '1'");
     }
+
+    [Test] public void CastParser()
+    {
+      var parser = Parse.String("abc").Cast<object>().IgnoreCase();
+
+      AssertParse(parser, "aBc", "aBc");
+    }
   }
 }

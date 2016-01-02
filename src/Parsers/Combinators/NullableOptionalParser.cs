@@ -2,15 +2,13 @@ using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
 {
-  internal sealed class OptionalParser<T> : Parser<T>
+  internal sealed class NullableOptionalParser<T> : Parser<T?> where T : struct
   {
     [NotNull] private readonly Parser<T> myUnderlyingParser;
-    private readonly T myDefaultValue;
 
-    public OptionalParser([NotNull] Parser<T> underlyingParser, T defaultValue)
+    public NullableOptionalParser([NotNull] Parser<T> underlyingParser)
     {
       myUnderlyingParser = underlyingParser;
-      myDefaultValue = defaultValue;
 
       AssertParserAllocation();
     }
@@ -18,17 +16,17 @@ namespace Parse.Sharp.Parsers.Combinators
     protected internal override ParseResult TryParseValue(string input, int offset)
     {
       var result = myUnderlyingParser.TryParseValue(input, offset);
-      if (result.IsSuccessful) return result;
+      if (result.IsSuccessful) return new ParseResult(result.Value, result.Offset);
 
-      return new ParseResult(myDefaultValue, offset);
+      return new ParseResult(value: null, nextOffset: offset);
     }
 
-    protected override Parser<T> CreateIgnoreCaseParser()
+    protected override Parser<T?> CreateIgnoreCaseParser()
     {
       var ignoreCaseParser = myUnderlyingParser.IgnoreCase();
       if (ReferenceEquals(myUnderlyingParser, ignoreCaseParser)) return this;
 
-      return new OptionalParser<T>(ignoreCaseParser, myDefaultValue);
+      return new NullableOptionalParser<T>(ignoreCaseParser);
     }
   }
 }

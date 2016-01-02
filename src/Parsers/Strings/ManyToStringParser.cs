@@ -30,6 +30,8 @@ namespace Parse.Sharp.Parsers.Strings
       return new ParseResult(value, nextOffset: innerOffset);
     }
 
+    // todo: throw in position when parse value is ignored?
+
     protected override Parser<string> CreateIgnoreCaseParser()
     {
       var ignoreCaseContentParser = myContentsParser.IgnoreCase();
