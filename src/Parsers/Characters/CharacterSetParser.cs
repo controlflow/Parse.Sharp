@@ -54,6 +54,8 @@ namespace Parse.Sharp.Parsers.Characters
         if (alternative != character) count ++;
       }
 
+
+
       if (count == 0) return this;
 
       var index = 0;

@@ -32,7 +32,10 @@ namespace Parse.Sharp.Parsers.Strings
 
     protected override Parser<string> CreateIgnoreCaseParser()
     {
-      return new ManyToStringParser(myContentsParser.IgnoreCase(), myDescription);
+      var ignoreCaseContentParser = myContentsParser.IgnoreCase();
+      if (ReferenceEquals(myContentsParser, ignoreCaseContentParser)) return this;
+
+      return new ManyToStringParser(ignoreCaseContentParser, myDescription);
     }
 
     public string GetExpectedMessage()
