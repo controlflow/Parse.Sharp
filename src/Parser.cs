@@ -8,6 +8,8 @@ namespace Parse.Sharp
 {
   public abstract class Parser<T> : Parser
   {
+    // todo: parse overload with startindex+length
+
     [Pure] public T Parse([NotNull] string input)
     {
       var result = TryParseValue(input, offset: 0);
