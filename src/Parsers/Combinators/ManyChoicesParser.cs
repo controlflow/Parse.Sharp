@@ -60,9 +60,11 @@ namespace Parse.Sharp.Parsers.Combinators
       public string GetExpectedMessage()
       {
         var builder = new StringBuilder(myBestFailure.FailPoint.GetExpectedMessage());
+        var separator = myOtherFailures.Count > 2 ? "|" : " or ";
+
         foreach (var failure in myOtherFailures)
         {
-          builder.Append(" or ").Append(failure.FailPoint.GetExpectedMessage());
+          builder.Append(separator).Append(failure.FailPoint.GetExpectedMessage());
         }
 
         return builder.ToString();

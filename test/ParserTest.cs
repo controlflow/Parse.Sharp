@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -18,7 +19,8 @@ namespace Parse.Sharp.Tests
       }
     }
 
-    public static void AssertParse<T>([NotNull] Parser<T> parser, [NotNull] string input, T expectedValue)
+    public static void AssertParse<T>(
+      [NotNull] Parser<T> parser, [NotNull] string input, T expectedValue, IEqualityComparer<T> equalityComparer = null)
     {
       Assert.NotNull(parser, "parser != null");
       Assert.NotNull(input, "input != null");
@@ -26,7 +28,11 @@ namespace Parse.Sharp.Tests
       using (Parse.AssertNoAllocations())
       {
         var parsedValue = parser.Parse(input);
-        Assert.AreEqual(parsedValue, expectedValue);
+
+        if (equalityComparer != null)
+          Assert.IsTrue(equalityComparer.Equals(parsedValue, expectedValue));
+        else
+          Assert.AreEqual(parsedValue, expectedValue);
       }
     }
 
