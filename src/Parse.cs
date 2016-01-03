@@ -38,17 +38,7 @@ namespace Parse.Sharp
 
     
 
-    [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> Choice<T>([NotNull] Parser<T> left, [NotNull] Parser<T> right)
-    {
-      return left.Or(right);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> Choice<T>([NotNull] params Parser<T>[] parsers)
-    {
-      return null;
-    }
+    
 
     // .And()
     // .Or()

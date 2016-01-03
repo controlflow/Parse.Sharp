@@ -40,7 +40,8 @@ namespace Parse.Sharp.Parsers.Combinators
         }
         else
         {
-          if (index >= myMin) return new ParseResult(value: list, nextOffset: offset);
+          if (result.Offset == offset && index >= myMin)
+            return new ParseResult(value: list, nextOffset: offset);
 
           return new ParseResult(failPoint: result.FailPoint, atOffset: result.Offset);
         }
@@ -64,7 +65,8 @@ namespace Parse.Sharp.Parsers.Combinators
         }
         else
         {
-          if (index >= myMin) return new ParseAttempt(nextOffset: offset);
+          if (result.Offset == offset && index >= myMin)
+            return new ParseAttempt(nextOffset: offset);
 
           return new ParseAttempt(failPoint: result.FailPoint, atOffset: result.Offset);
         }

@@ -45,10 +45,10 @@ namespace Parse.Sharp
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> InFrontOf<T>([NotNull] this Parser<T> parser, [NotNull] Parser headParser)
+    public static Parser<T> InFrontOf<T>([NotNull] this Parser headParser, [NotNull] Parser<T> parser)
     {
-      if (parser == null) throw new ArgumentNullException("parser");
       if (headParser == null) throw new ArgumentNullException("headParser");
+      if (parser == null) throw new ArgumentNullException("parser");
 
       return new BeforeParserTest<T>(headParser, parser);
     }

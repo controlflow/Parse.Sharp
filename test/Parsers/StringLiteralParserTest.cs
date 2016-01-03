@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -59,7 +58,7 @@ namespace Parse.Sharp.Tests.Parsers
     [Test] public void WithEscaping()
     {
       var hexDigit = Parse.AnyCharOf("0123456789abcdef").IgnoreCase();
-      var hexNumber = hexDigit.Many(min: 1, max: 4).Select(HexStringToValue);
+      var hexNumber = hexDigit.ManyToString(min: 1, max: 4).Select(HexStringToValue);
 
       var escapedCharacter = Parse.Choice(
         Parse.Char('\'').Select('\''),
@@ -73,33 +72,27 @@ namespace Parse.Sharp.Tests.Parsers
         Parse.Char('r').Select('\r'),
         Parse.Char('t').Select('\t'),
         Parse.Char('v').Select('\v'),
-        Parse.Char('x').InFrontOf(hexNumber),
-        Parse.Fail<char>(expectation: "valid escape sequence"));
+        Parse.Char('x').InFrontOf(hexNumber)
+        ).Named("valid escape sequence");
 
-      var ordinaryCharacter = Parse.AnyCharExcept('\\', '\x27', '\x5C', '\r', '\n');
+      var ordinaryCharacter = Parse.AnyCharExcept('\\', '\x27', '\x5C', '\r', '\n', '"');
       var literalPart = ordinaryCharacter.Or(Parse.Char('\\').InFrontOf(escapedCharacter));
 
-      var literalContent = literalPart.Many(min: 0, max: uint.MaxValue)
-        // todo: aggregate to string
-        .Select(x => new string(x.ToArray()));
-
+      var literalContent = literalPart.ManyToString(min: 0, max: uint.MaxValue);
       var stringLiteral = literalContent.SurroundWith(Parse.Char('"'));
 
+      AssertParse(stringLiteral, @"""abc""", "abc");
+      AssertParse(stringLiteral, @"""abc\t""", "abc\t");
       AssertParse(stringLiteral, @"""ab\r\nc012""", "ab\r\nc012");
+
+      //AssertFailure(stringLiteral, @"""abc", expectedMessage: "'\"' expected, got end of string", failureOffset: 4);
+      AssertFailure(stringLiteral, @"""abc\", expectedMessage: "valid escape sequence expected, got end of string", failureOffset: 5);
     }
 
-    private static char HexStringToValue([NotNull] List<char> characters)
+    private static char HexStringToValue([NotNull] string text)
     {
-      var text = new string(characters.ToArray());
       var value = int.Parse(text, NumberStyles.AllowHexSpecifier);
-
       return Convert.ToChar(value);
     }
-
-
-    // todo: string literal with escaping
-    // todo: escaping combinator?
-    // todo: combinator for building string from char
-    // todo: C# verbatim literals
   }
 }

@@ -33,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Parse.Choice.cs" />
     <Compile Include="Parse.Sequential.cs" />
     <Compile Include="Parse.Aggregate.cs" />
     <Compile Include="Parse.Quantifiers.cs" />

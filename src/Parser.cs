@@ -3,7 +3,6 @@ using System.Diagnostics;
 using JetBrains.Annotations;
 using Parse.Sharp.Parsers;
 using Parse.Sharp.Parsers.Combinators;
-using Parse.Sharp.Parsers.Strings;
 
 namespace Parse.Sharp
 {
@@ -150,11 +149,7 @@ namespace Parse.Sharp
 
     // combinators:
 
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<T> Or(Parser<T> other)
-    {
-      return new ChoiceParser<T>(this, other);
-    }
+    
 
     [NotNull, Pure, DebuggerStepThrough]
     public Parser<object> Not([CanBeNull] string description = null)
