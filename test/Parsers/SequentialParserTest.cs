@@ -6,8 +6,8 @@ namespace Parse.Sharp.Tests.Parsers
   {
     [Test] public void After()
     {
-      AssertParse(Parse.Digit.WhitespaceAfter(), "1   ", 1);
-      AssertParse(Parse.Digit.WithTail(Parse.WhitespaceChar.ManyToString()), "1   ", 1);
+      AssertParse(Parse.Digit.WithWhitespaceAfter(), "1   ", 1);
+      AssertParse(Parse.Digit.WithTail(Parse.WhitespaceChar.Many()), "1   ", 1);
     }
 
     [Test] public void SurroundWith1()

@@ -32,40 +32,41 @@ namespace Parse.Sharp
     {
       if (parser == null) throw new ArgumentNullException("parser");
 
-      // todo: whitespace.many()
-      var whitespace = WhitespaceChar.Many(0, uint.MaxValue);
-      return new SurroundParser<T>(whitespace, parser, whitespace);
+      return new SurroundParser<T>(Whitespace, parser, Whitespace);
     }
-
-
-
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<T> WithTail<T>([NotNull] this Parser<T> parser, [NotNull] Parser tailParser)
     {
+      if (parser == null) throw new ArgumentNullException("parser");
+      if (tailParser == null) throw new ArgumentNullException("tailParser");
+
       return new AfterParserTest<T>(parser, tailParser);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<T> InFrontOf<T>([NotNull] this Parser<T> parser, [NotNull] Parser headParser)
     {
+      if (parser == null) throw new ArgumentNullException("parser");
+      if (headParser == null) throw new ArgumentNullException("headParser");
+
       return new BeforeParserTest<T>(headParser, parser);
     }
 
-    
-
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> WhitespaceAfter<T>([NotNull] this Parser<T> parser)
+    public static Parser<T> WithWhitespaceAfter<T>([NotNull] this Parser<T> parser)
     {
-      // todo: whitespace.many()
-      return new AfterParserTest<T>(parser, WhitespaceChar);
+      if (parser == null) throw new ArgumentNullException("parser");
+
+      return new AfterParserTest<T>(parser, Whitespace);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> WhitespaceBefore<T>([NotNull] this Parser<T> parser)
+    public static Parser<T> WithWhitespaceBefore<T>([NotNull] this Parser<T> parser)
     {
-      // todo: whitespace.many()
-      return new AfterParserTest<T>(parser, WhitespaceChar);
+      if (parser == null) throw new ArgumentNullException("parser");
+
+      return new AfterParserTest<T>(parser, Whitespace);
     }
   }
 }

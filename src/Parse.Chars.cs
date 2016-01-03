@@ -33,6 +33,8 @@ namespace Parse.Sharp
     [NotNull] public static readonly Parser<char> UpperCaseChar = Char(char.IsUpper, "upper case character");
     [NotNull] public static readonly Parser<char> WhitespaceChar = Char(char.IsWhiteSpace, "whitespace");
 
+    [NotNull] public static readonly Parser Whitespace = WhitespaceChar.Many();
+
     [NotNull, Pure, DebuggerStepThrough]
     public static Parser<char> Char([NotNull] Predicate<char> predicate, [NotNull] string description)
     {

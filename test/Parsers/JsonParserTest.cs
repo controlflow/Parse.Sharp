@@ -17,7 +17,7 @@ namespace Parse.Sharp.Tests.Parsers
       select contents;
 
     private static readonly Parser<ObjLiteral> ObjectLiteral =
-      from lBrace in Parse.Char('{').WhitespaceAfter()
+      from lBrace in Parse.Char('{').WithWhitespaceAfter()
       from properties in (
            from propertyName in StringLiteral
            from colon in Parse.Char(':').Token()
@@ -33,7 +33,7 @@ namespace Parse.Sharp.Tests.Parsers
       select new ObjLiteral(properties);
 
     private static readonly Parser<object[]> ArrayLiteral =
-      from lBrace in Parse.Char('[').WhitespaceAfter()
+      from lBrace in Parse.Char('[').WithWhitespaceAfter()
       from items in (
         from value in PropertyValue // +ws
         select value

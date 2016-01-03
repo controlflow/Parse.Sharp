@@ -17,7 +17,7 @@ namespace Parse.Sharp.Tests.Parsers
     public void LessAllocations()
     {
       var text = "class";
-      var parser = Parse.String(text).WhitespaceAfter();
+      var parser = Parse.String(text).WithWhitespaceAfter();
 
       var parsedText1 = parser.Parse("class ");
       Assert.IsTrue(ReferenceEquals(text, parsedText1));
@@ -32,7 +32,7 @@ namespace Parse.Sharp.Tests.Parsers
     [Test] public void ManyToString()
     {
       AssertParse(Parse.LetterChar.ManyToString(), "abcDEF", "abcDEF");
-      AssertParse(Parse.Digit.Not("not digit").ManyToString(), "abcDEF", "abcDEF");
+      AssertParse(Parse.CharExcept(char.IsDigit, "not digit").ManyToString(), "abcDEF", "abcDEF");
       AssertParse(Parse.LetterOrDigitChar.ManyToString(), "abCD45", "abCD45");
       AssertParse(Parse.LetterOrDigitChar.Not().Not().ManyToString(), "abCD45", "abCD45");
 

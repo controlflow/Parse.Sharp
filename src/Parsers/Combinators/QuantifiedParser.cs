@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace Parse.Sharp.Parsers.Combinators
@@ -28,6 +29,9 @@ namespace Parse.Sharp.Parsers.Combinators
         if (result.IsSuccessful)
         {
           list.Add(result.Value);
+
+          if (offset == result.Offset)
+            throw new ArgumentException("Infinite iteration detected");
 
           offset = result.Offset;
           index ++;
@@ -71,10 +75,10 @@ namespace Parse.Sharp.Parsers.Combinators
 
     protected override Parser<List<T>> CreateIgnoreCaseParser()
     {
-      var ignoreCasePArser = myUnderlyingParser.IgnoreCase();
-      if (ReferenceEquals(myUnderlyingParser, ignoreCasePArser)) return this;
+      var ignoreCaseParser = myUnderlyingParser.IgnoreCase();
+      if (ReferenceEquals(myUnderlyingParser, ignoreCaseParser)) return this;
 
-      return new QuantifiedParser<T>(ignoreCasePArser, myMin, myMax);
+      return new QuantifiedParser<T>(ignoreCaseParser, myMin, myMax);
     }
   }
 }

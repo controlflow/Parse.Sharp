@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
 using Parse.Sharp.Parsers.Combinators;
-using Parse.Sharp.Parsers.Strings;
 
 namespace Parse.Sharp
 {
@@ -37,6 +36,7 @@ namespace Parse.Sharp
     public static Parser<List<T>> Many<T>([NotNull] this Parser<T> parser, uint min, uint max)
     {
       if (parser == null) throw new ArgumentNullException("parser");
+      if (min > max) throw new ArgumentOutOfRangeException("min", "min > max");
 
       return new QuantifiedParser<T>(parser, min, max);
     }
@@ -46,14 +46,16 @@ namespace Parse.Sharp
     {
       if (parser == null) throw new ArgumentNullException("parser");
 
-      return new ManyToStringParser(parser);
+      return new QuantifiedParserToString<T>(parser, min: 0, max: uint.MaxValue);
     }
 
+    [NotNull, Pure, DebuggerStepThrough]
+    public static Parser<string> ManyToString<T>([NotNull] this Parser<T> parser, uint min, uint max)
+    {
+      if (parser == null) throw new ArgumentNullException("parser");
+      if (min > max) throw new ArgumentOutOfRangeException("min", "min > max");
 
-
-
-    // .Many(min: )
-    // .AtLeastOnce()
-    // .Times(n)
+      return new QuantifiedParserToString<T>(parser, min: 0, max: uint.MaxValue);
+    }
   }
 }

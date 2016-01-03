@@ -48,7 +48,8 @@
     <Compile Include="Parsers\Combinators\FailureParser.cs" />
     <Compile Include="Parsers\Combinators\NonEmptyParser.cs" />
     <Compile Include="Parsers\Combinators\NullableOptionalParser.cs" />
-    <Compile Include="Parsers\Combinators\QualifiedParser.cs" />
+    <Compile Include="Parsers\Combinators\QuantifiedParser.cs" />
+    <Compile Include="Parsers\Combinators\QuantifiedParserToString.cs" />
     <Compile Include="Parsers\Combinators\ReturnParser.cs" />
     <Compile Include="Parsers\Combinators\OptionalParser.cs" />
     <Compile Include="Parsers\Combinators\SurroundParser.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="Parsers\DigitParser.cs" />
     <Compile Include="Parsers\Integer32Parser.cs" />
     <Compile Include="Parsers\Characters\PredicateCharacterParser.cs" />
-    <Compile Include="Parsers\Strings\ManyToStringParser.cs" />
     <Compile Include="Parsers\Strings\StringParser.cs" />
     <Compile Include="ParserWithDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
