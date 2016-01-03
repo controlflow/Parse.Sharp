@@ -47,6 +47,7 @@
     <Compile Include="Parsers\Combinators\ChoiceParser.cs" />
     <Compile Include="Parsers\Combinators\AfterParserTest.cs" />
     <Compile Include="Parsers\Combinators\FailureParser.cs" />
+    <Compile Include="Parsers\Combinators\ManyChoicesParser.cs" />
     <Compile Include="Parsers\Combinators\NamedRuleParser.cs" />
     <Compile Include="Parsers\Combinators\NonEmptyParser.cs" />
     <Compile Include="Parsers\Combinators\NullableOptionalParser.cs" />

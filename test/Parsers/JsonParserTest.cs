@@ -56,7 +56,7 @@ namespace Parse.Sharp.Tests.Parsers
     }
 
 
-    [Test] public void M()
+    [Test] public void ParseJson()
     {
       AssertParse(StringLiteral, "\"abc\"", "abc");
 

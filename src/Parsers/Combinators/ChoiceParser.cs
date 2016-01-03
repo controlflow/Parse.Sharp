@@ -15,6 +15,9 @@ namespace Parse.Sharp.Parsers.Combinators
       AssertParserAllocation();
     }
 
+    [NotNull] public Parser<T> LeftParser { get { return myLeftParser; } }
+    [NotNull] public Parser<T> RightParser { get { return myRightParser; } }
+
     protected internal override ParseResult TryParseValue(string input, int offset)
     {
       var leftResult = myLeftParser.TryParseValue(input, offset);
@@ -24,25 +27,21 @@ namespace Parse.Sharp.Parsers.Combinators
       if (rightResult.IsSuccessful) return rightResult;
 
       if (leftResult.Offset > rightResult.Offset)
-      {
         return new ParseResult(leftResult.FailPoint, leftResult.Offset);
-      }
 
       if (rightResult.Offset > leftResult.Offset)
-      {
         return new ParseResult(rightResult.FailPoint, rightResult.Offset);
-      }
 
-      var failPoint = new ChoiseFailPoint(leftResult, rightResult);
-      return new ParseResult(failPoint, offset);
+      var failPoint = new ChoiceFailPoint(leftResult, rightResult);
+      return new ParseResult(failPoint, leftResult.Offset);
     }
 
-    private sealed class ChoiseFailPoint : IFailPoint
+    private sealed class ChoiceFailPoint : IFailPoint
     {
       private readonly ParseResult myLeftResult;
       private readonly ParseResult myRightResult;
 
-      public ChoiseFailPoint(ParseResult leftResult, ParseResult rightResult)
+      public ChoiceFailPoint(ParseResult leftResult, ParseResult rightResult)
       {
         myLeftResult = leftResult;
         myRightResult = rightResult;
@@ -50,8 +49,7 @@ namespace Parse.Sharp.Parsers.Combinators
 
       public string GetExpectedMessage()
       {
-        return myLeftResult.FailPoint.GetExpectedMessage()
-             + " or "
+        return myLeftResult.FailPoint.GetExpectedMessage() + " or "
              + myRightResult.FailPoint.GetExpectedMessage();
       }
     }
@@ -62,15 +60,9 @@ namespace Parse.Sharp.Parsers.Combinators
       var ignoreCaseRightParser = myRightParser.IgnoreCase();
 
       if (ReferenceEquals(myLeftParser, ignoreCaseLeftParser) &&
-          ReferenceEquals(myRightParser, ignoreCaseRightParser))
-      {
-        return this;
-      }
+          ReferenceEquals(myRightParser, ignoreCaseRightParser)) return this;
 
       return new ChoiceParser<T>(myLeftParser, myRightParser);
     }
   }
-
-  // todo: choice of array
-  // todo: normalization of same-level choices
 }
