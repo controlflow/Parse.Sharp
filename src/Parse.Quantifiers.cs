@@ -29,7 +29,7 @@ namespace Parse.Sharp
     {
       if (parser == null) throw new ArgumentNullException("parser");
 
-      return new QuantifiedParser<T>(parser, count, count);
+      return new QuantifiedParser<T>(parser, min: count, max: count);
     }
 
     [NotNull, Pure, DebuggerStepThrough]
@@ -50,12 +50,20 @@ namespace Parse.Sharp
     }
 
     [NotNull, Pure, DebuggerStepThrough]
+    public static Parser<string> ManyToString<T>([NotNull] this Parser<T> parser, uint count)
+    {
+      if (parser == null) throw new ArgumentNullException("parser");
+
+      return new QuantifiedParserToString<T>(parser, min: count, max: count);
+    }
+
+    [NotNull, Pure, DebuggerStepThrough]
     public static Parser<string> ManyToString<T>([NotNull] this Parser<T> parser, uint min, uint max)
     {
       if (parser == null) throw new ArgumentNullException("parser");
       if (min > max) throw new ArgumentOutOfRangeException("min", "min > max");
 
-      return new QuantifiedParserToString<T>(parser, min: 0, max: uint.MaxValue);
+      return new QuantifiedParserToString<T>(parser, min, max);
     }
   }
 }

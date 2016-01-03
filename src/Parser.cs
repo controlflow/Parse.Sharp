@@ -124,13 +124,6 @@ namespace Parse.Sharp
     {
       [NotNull] public static readonly Func<T, TTarget> Id = value => (TTarget) (object) value;
     }
-    
-
-    
-
-    
-
-
 
     // query syntax support:
 
@@ -174,25 +167,7 @@ namespace Parse.Sharp
     {
       return new NonEmptyParser<T>(this, description);
     }
-
-    // qualifiers:
-
-    
-
-    
-
-    
-
-    //private class ToNullable<TResult> : Parser<TResult?>
-    //  where TResult : struct
-    //{
-    //  protected override ParseResult TryParse(string input, int offset, bool isConditional)
-    //  {
-    //    return new ParseResult();
-    //  }
-    //}
   }
-
 
   public abstract class Parser
   {

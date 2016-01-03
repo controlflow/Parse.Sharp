@@ -37,5 +37,12 @@ namespace Parse.Sharp.Tests.Parsers
 
       AssertParse(parser, "aBc", "aBc");
     }
+
+    [Test] public void NamedParser()
+    {
+      var parser = Parse.AnyChar.Not().Named("named rule");
+
+      AssertFailure(parser, "abc", expectedMessage: "named rule expected, got 'abc'");
+    }
   }
 }
