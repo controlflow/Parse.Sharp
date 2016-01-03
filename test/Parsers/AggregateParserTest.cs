@@ -28,5 +28,12 @@ namespace Parse.Sharp.Tests.Parsers
       AssertParse(parser2, "012a3fe1", "012a3fe1");
       AssertParse(parser2, "012A3fBE1", "012A3fBE1");
     }
+
+    [Test] public void AggregateCharactersToString()
+    {
+      var hexCharacters = Parse.AnyCharOf("0123456789abcdef");
+
+      //hexCharacters.Many(min: 0, max: 10).Aggregate()
+    }
   }
 }

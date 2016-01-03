@@ -13,9 +13,9 @@ namespace Parse.Sharp
     }
 
     [NotNull, Pure, DebuggerStepThrough]
-    public static Parser<T> Fail<T>([NotNull] string description)
+    public static Parser<T> Fail<T>([NotNull] string expectation)
     {
-      return new FailureParser<T>(description);
+      return new FailureParser<T>(expectation);
     }
   }
 }

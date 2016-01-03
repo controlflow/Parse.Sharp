@@ -15,6 +15,8 @@ namespace Parse.Sharp.Tests.Parsers
         par => par.Select(chars => new string(chars.ToArray()));
 
       AssertParse(f(parser.Many(count: 6)), input);
+      AssertParse(f(parser.Many()), input, input);
+      AssertParse(f(parser.AtLeastOnce()), input, input);
       AssertParse(f(parser.Many(min: 0, max: 6)), input, input);
       AssertParse(f(parser.Many(min: 1, max: 6)), input, input);
       AssertParse(f(parser.Many(min: 2, max: 6)), input, input);
@@ -24,7 +26,7 @@ namespace Parse.Sharp.Tests.Parsers
       AssertParse(f(parser.Many(min: 6, max: 6)), input, input);
 
       Func<Parser<List<char>>, Parser<string>> g =
-        par => f(par).WithTail(Parse.AnyChar.Many(min: 0, max: uint.MaxValue));
+        par => f(par).WithTail(Parse.AnyChar.Many());
 
       AssertParse(g(parser.Many(min: 0, max: 0)), input, "");
       AssertParse(g(parser.Many(min: 0, max: 1)), input, "a");
@@ -37,7 +39,7 @@ namespace Parse.Sharp.Tests.Parsers
 
     [Test] public void ManyValueIgnored()
     {
-      var parser = Parse.Char('a').WithTail(Parse.WhitespaceChar.Many(min: 0, max: uint.MaxValue)).IgnoreCase();
+      var parser = Parse.Char('a').WithTail(Parse.WhitespaceChar.Many()).IgnoreCase();
 
       AssertParse(parser, "a", 'a');
       AssertParse(parser, "a ", 'a');

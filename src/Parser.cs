@@ -128,45 +128,7 @@ namespace Parse.Sharp
 
     
 
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<T> SurroundWith([NotNull] Parser headAndTailParser)
-    {
-      return new SurroundParser<T>(headAndTailParser, this, headAndTailParser);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<T> SurroundWith([NotNull] Parser headParser, [NotNull] Parser tailParser)
-    {
-      return new SurroundParser<T>(headParser, this, tailParser);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<T> WithTail([NotNull] Parser tailParser)
-    {
-      return new AfterParserTest<T>(this, tailParser);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<T> Token()
-    {
-      // todo: whitespace.many()
-      var whitespace = Sharp.Parse.WhitespaceChar;
-      return new SurroundParser<T>(whitespace, this, whitespace);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<T> WhitespaceAfter()
-    {
-      // todo: whitespace.many()
-      return new AfterParserTest<T>(this, Sharp.Parse.WhitespaceChar);
-    }
-
-    [NotNull, Pure, DebuggerStepThrough]
-    public Parser<T> WhitespaceBefore()
-    {
-      // todo: whitespace.many()
-      return new AfterParserTest<T>(this, Sharp.Parse.WhitespaceChar);
-    }
+    
 
 
 

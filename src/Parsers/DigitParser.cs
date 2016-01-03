@@ -21,4 +21,6 @@
       return "digit";
     }
   }
+
+  // todo: hex/oct digit
 }
