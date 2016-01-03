@@ -40,16 +40,14 @@ namespace Parse.Sharp.Tests
       try
       {
         var result = parser.Parse(input);
-        GC.KeepAlive(result);
+
+        throw new AssertionException(string.Format("Parsing failure expected, got: {0}", result));
       }
       catch (ParseException parseException)
       {
         Assert.AreEqual(expectedMessage, parseException.Message, "Failure message is wrong");
         Assert.AreEqual(failureOffset, parseException.Offset, "Failure offset is wrong");
-        return;
       }
-
-      throw new AssertionException("Parsing failure expected");
     }
   }
 }

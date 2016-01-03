@@ -43,8 +43,7 @@ namespace Parse.Sharp.Tests.Parsers
     {
       var hexDigit = Parse.AnyCharOf("0123456789abcdef");
 
-      var hexNumber = hexDigit.Many(min: 1, max: 4)
-        .Select(list => new string(list.ToArray()))
+      var hexNumber = hexDigit.ManyToString(min: 1, max: 4)
         .Select(text => Convert.ToChar(int.Parse(text, NumberStyles.AllowHexSpecifier)))
         .IgnoreCase();
 

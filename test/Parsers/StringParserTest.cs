@@ -34,7 +34,6 @@ namespace Parse.Sharp.Tests.Parsers
       AssertParse(Parse.LetterChar.ManyToString(), "abcDEF", "abcDEF");
       AssertParse(Parse.CharExcept(char.IsDigit, "not digit").ManyToString(), "abcDEF", "abcDEF");
       AssertParse(Parse.LetterOrDigitChar.ManyToString(), "abCD45", "abCD45");
-      AssertParse(Parse.LetterOrDigitChar.Not().Not().ManyToString(), "abCD45", "abCD45");
 
       AssertFailure(
         Parse.LetterChar.ManyToString(), input: "abc123",
@@ -48,7 +47,7 @@ namespace Parse.Sharp.Tests.Parsers
         failureOffset: 14);
 
       AssertFailure(
-        Parse.LetterOrDigitChar.Not().Not().ManyToString().NonEmpty(),
+        Parse.LetterOrDigitChar.ManyToString().Named("identifier").NonEmpty(),
         input: "_abAA534\r\nABC",
         expectedMessage: "non-empty identifier expected, got '_abAA534 ABC'");
     }
